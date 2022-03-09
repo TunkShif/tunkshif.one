@@ -14,7 +14,7 @@ const Avatar = ({ author }: { author: Author }) => {
         src={author.avatarUrl}
         width={32}
         height={32}
-	alt="user avatar"
+        alt="user avatar"
         className="rounded-full"
       />
       <span>
@@ -109,7 +109,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths,
-    fallback: false
+    fallback: "blocking"
   }
 }
 
