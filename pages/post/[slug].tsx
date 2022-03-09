@@ -14,6 +14,7 @@ const Avatar = ({ author }: { author: Author }) => {
         src={author.avatarUrl}
         width={32}
         height={32}
+	alt="user avatar"
         className="rounded-full"
       />
       <span>
@@ -36,7 +37,7 @@ const Comments = ({
     <section className="space-y-8">
       <div className="space-y-6">
         {comments.map((comment) => (
-          <div className="flex flex-col space-y-4">
+          <div className="flex flex-col space-y-4" key={comment.url}>
             <div className="flex items-center space-x-4 text-sm font-medium text-gray-600 dark:text-gray-200">
               <Avatar author={comment.author} />
               <div>

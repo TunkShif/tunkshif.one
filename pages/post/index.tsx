@@ -1,5 +1,5 @@
 const Posts = () => {
-  return <div>"haha"</div>
+  return <div>posts</div>
 }
 
 export default Posts
