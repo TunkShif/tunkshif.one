@@ -29,3 +29,8 @@ export type Repository = {
     nodes: Issue[]
   }
 }
+
+export type FrontMatter = {
+  slug: string
+  tags: string[]
+}
