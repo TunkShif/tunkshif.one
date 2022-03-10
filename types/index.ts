@@ -32,5 +32,6 @@ export type Repository = {
 
 export type FrontMatter = {
   slug: string
+  lang: "en" | "zh"
   tags: string[]
 }

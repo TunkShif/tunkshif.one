@@ -16,7 +16,7 @@ const Item = ({ path, hasTrailingSlash }: ItemProps) => {
     <>
       <li>
         <Link href={path.href} passHref>
-          <a className="rounded-sm px-2.5 py-1 font-medium text-gray-500 transition-all hover:bg-gray-200 hover:bg-opacity-50 hover:text-gray-600 dark:text-gray-100 dark:hover:bg-black">
+          <a className="rounded-sm px-2.5 py-1 font-medium text-gray-500 transition-all hover:bg-gray-200 hover:bg-opacity-50 hover:text-gray-600 dark:text-gray-400 dark:hover:bg-black">
             {path.name}
           </a>
         </Link>

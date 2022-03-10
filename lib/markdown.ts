@@ -4,6 +4,7 @@ import remarkGfm from "remark-gfm"
 import remarkMath from "remark-math"
 import remarkRehype from "remark-rehype"
 import rehypePrism from "rehype-prism-plus"
+import rehypeKatex from "rehype-katex"
 import rehypeStringify from "rehype-stringify"
 
 export const render = (content: string) =>
@@ -13,6 +14,7 @@ export const render = (content: string) =>
     .use(remarkMath)
     .use(remarkRehype)
     .use(rehypePrism)
+    .use(rehypeKatex)
     .use(rehypeStringify)
     .process(content)
     .then((vfile) => String(vfile))

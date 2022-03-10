@@ -1,10 +1,13 @@
 import { GetStaticPaths, InferGetStaticPropsType } from "next"
 import Image from "next/image"
 import Link from "next/link"
-import { find } from "remeda"
+import { Error } from "../../components"
+import { useRouter } from "next/router"
+import { repository } from "../../lib"
 import { date } from "../../lib/helper"
-import * as repository from "../../lib/repository"
+import { find } from "remeda"
 import { Comment, Author } from "../../types"
+import "katex/dist/katex.min.css"
 import "prism-themes/themes/prism-one-dark.css"
 
 const Avatar = ({ author }: { author: Author }) => {
@@ -68,7 +71,13 @@ const Comments = ({
 }
 
 const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  return (
+  const router = useRouter()
+  return router.isFallback ? (
+    <Error>
+      <p>Page not available yet.</p>
+      <p>Maybe come back later?</p>
+    </Error>
+  ) : (
     <div>
       <section className="flex flex-col space-y-4">
         <h1 className="text-4xl font-extrabold dark:text-gray-100">
@@ -109,7 +118,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return {
     paths,
-    fallback: "blocking"
+    fallback: true
   }
 }
 
