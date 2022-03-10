@@ -1,4 +1,5 @@
 import { InferGetStaticPropsType } from "next"
+import Head from "next/head"
 import Link from "next/link"
 import { repository } from "../../lib"
 import { date } from "../../lib/helper"
@@ -6,6 +7,9 @@ import { date } from "../../lib/helper"
 const Posts = ({ posts }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <div className="space-y-4">
+      <Head>
+        <title>All Posts - tunkshif.one</title>
+      </Head>
       {posts.map((post) => (
         <div
           key={post.frontmatter.slug}

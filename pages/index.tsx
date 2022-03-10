@@ -1,9 +1,13 @@
 import type { NextPage } from "next"
+import Head from "next/head"
 import Link from "next/link"
 
 const Home: NextPage = () => {
   return (
     <div className="mt-6 flex flex-col">
+      <Head>
+        <title>tunkshif.one</title>
+      </Head>
       <section className="mb-6">
         <h1 className="mb-6 text-4xl font-extrabold text-gray-800 dark:text-gray-50">
           Hi, there!

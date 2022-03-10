@@ -13,7 +13,10 @@ const DarkModeToggle = () => {
 
   return (
     <div className="flex content-center justify-center">
-      <button onClick={() => setDarkMode(!darkMode)}>
+      <button
+        onClick={() => setDarkMode(!darkMode)}
+        aria-label="dark mode toggle"
+      >
         {darkMode ? (
           <SunIcon className="h-6 w-6 text-gray-100 opacity-80 hover:opacity-100" />
         ) : (

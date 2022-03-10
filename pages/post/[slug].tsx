@@ -9,6 +9,7 @@ import { find } from "remeda"
 import { Comment, Author } from "../../types"
 import "katex/dist/katex.min.css"
 import "prism-themes/themes/prism-one-dark.css"
+import Head from "next/head"
 
 const Avatar = ({ author }: { author: Author }) => {
   return (
@@ -74,11 +75,18 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter()
   return router.isFallback ? (
     <Error>
+      <Head>
+        <title>Not Available Yet - tunkshif.one</title>
+      </Head>
       <p>Page not available yet.</p>
       <p>Maybe come back later?</p>
     </Error>
   ) : (
     <div>
+      <Head>
+        <title>{post.title} - tunkshif.one</title>
+        <meta property="og:title" content="My page title" key={post.title} />
+      </Head>
       <section className="flex flex-col space-y-4">
         <h1 className="text-4xl font-extrabold dark:text-gray-100">
           {post.title}
