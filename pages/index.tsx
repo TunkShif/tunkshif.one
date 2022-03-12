@@ -16,7 +16,7 @@ const Home: NextPage = () => {
           I&apos;m TunkShif (<em>Tristan Young </em>), currently an
           undergraduate in software engineering.
           <br />
-          And I&apos;m interested in programming, building fun stuff about
+          I&apos;m interested in programming, building fun stuff about
           computer and web.
           <br />
           Besides, I&apos;m also a language and linguistics enthusiast.

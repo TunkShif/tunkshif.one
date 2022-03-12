@@ -1,5 +1,5 @@
 import matter from "gray-matter"
-import { pick } from "remeda"
+import { pick, find } from "remeda"
 import * as markdown from "../lib/markdown"
 import { FrontMatter, Repository } from "../types"
 
@@ -51,6 +51,19 @@ query GetPostsQuery($owner: String!, $repo: String!) {
   }
 }`
 
+const getAboutQuery = `
+query GetAboutQuery($owner: String!, $repo: String!) {
+  repository(owner: $owner, name: $repo) {
+    issues(first: 2, labels: ["about"]) {
+      nodes {
+	id,
+	title,
+	body
+      }
+    }
+  }
+}`
+
 const variables = { owner: OWNER, repo: REPO }
 
 export const getPosts = async () => {
@@ -73,6 +86,21 @@ export const getPosts = async () => {
       }
     })
   )
+}
+
+export const getAbout = async () => {
+  const repository = await request(getAboutQuery, variables)
+  const issues = repository.issues.nodes
+  const pages = await Promise.all(
+    issues.map(async (issue) => ({
+      ...issue,
+      html: await markdown.render(issue.body)
+    }))
+  )
+  return {
+    en: find(pages, (page) => page.title === "About EN")!!.html,
+    zh: find(pages, (page) => page.title === "About ZH")!!.html
+  }
 }
 
 export const getTitles = () =>
