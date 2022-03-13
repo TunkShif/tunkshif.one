@@ -39,7 +39,7 @@ const About = ({ about }: InferGetStaticPropsType<typeof getStaticProps>) => {
         </div>
       </div>
       <article
-        className="prose dark:prose-invert"
+        className="prose max-w-5xl dark:prose-invert"
         dangerouslySetInnerHTML={{
           __html: choice(about.en, about.zh)
         }}
