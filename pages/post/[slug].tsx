@@ -1,15 +1,15 @@
-import { GetStaticPaths, InferGetStaticPropsType } from "next"
+import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
-import { Error } from "../../components"
 import { useRouter } from "next/router"
+import { GetStaticPaths, InferGetStaticPropsType } from "next"
+import { find } from "remeda"
+import { Error } from "../../components"
 import { repository } from "../../lib"
 import { date } from "../../lib/helper"
-import { find } from "remeda"
-import { Comment, Author } from "../../types"
+import { Author, Comment } from "../../types"
 import "katex/dist/katex.min.css"
 import "prism-themes/themes/prism-one-dark.css"
-import Head from "next/head"
 
 const Avatar = ({ author }: { author: Author }) => {
   return (
@@ -87,7 +87,7 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
         <title>{post.title} - tunkshif.one</title>
         <meta property="og:title" content="My page title" key={post.title} />
       </Head>
-      <section className="flex flex-col space-y-4">
+      <section className="mb-4 flex flex-col space-y-4">
         <h1 className="text-4xl font-extrabold dark:text-gray-100">
           {post.title}
         </h1>
@@ -107,7 +107,7 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
         </div>
       </section>
       <article
-        className="prose mx-auto max-w-5xl dark:prose-invert"
+        className="prose mx-auto max-w-5xl prose-blockquote:font-normal prose-code:rounded-sm prose-code:bg-gray-200 prose-code:p-0.5 prose-code:text-gray-500 prose-code:before:content-none prose-code:after:content-none dark:prose-invert dark:prose-code:bg-gray-800 dark:prose-code:text-gray-200"
         dangerouslySetInnerHTML={{ __html: post.html }}
       />
       <hr className="my-8" />
