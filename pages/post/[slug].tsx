@@ -107,7 +107,7 @@ const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
         </div>
       </section>
       <article
-        className="prose mx-auto max-w-5xl prose-blockquote:font-normal prose-code:rounded-sm prose-code:bg-gray-200 prose-code:p-0.5 prose-code:text-gray-500 prose-code:before:content-none prose-code:after:content-none dark:prose-invert dark:prose-code:bg-gray-800 dark:prose-code:text-gray-200"
+        className="prose mx-auto max-w-5xl prose-blockquote:font-normal prose-code:rounded-sm prose-code:bg-gray-200 prose-code:p-0.5 prose-code:text-gray-500 prose-code:before:content-none prose-code:after:content-none dark:prose-invert dark:prose-code:bg-[#282c34] dark:prose-code:text-gray-200"
         dangerouslySetInnerHTML={{ __html: post.html }}
       />
       <hr className="my-8" />
