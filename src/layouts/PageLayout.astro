@@ -1,0 +1,14 @@
+---
+import Layout from "./Layout.astro"
+---
+
+<Layout title="About Me - tunkshif.one">
+  <main>
+    <h1 class="mb-4 text-4xl font-extrabold">About Me</h1>
+    <article
+      class="prose mx-auto max-w-4xl prose-blockquote:font-normal prose-blockquote:not-italic prose-code:font-normal prose-code:font-mono prose-code:before:content-none prose-code:after:content-none dark:prose-invert prose-code:rounded-sm prose-code:bg-gray-200 prose-code:pt-0.5 prose-code:text-gray-500 dark:prose-code:bg-[#282c34] dark:prose-code:text-gray-200"
+    >
+      <slot />
+    </article>
+  </main>
+</Layout>
