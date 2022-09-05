@@ -32,5 +32,50 @@ const { title, tags, pubDate } = Astro.props.frontmatter as Frontmatter
     >
       <slot />
     </article>
+    <section class="mt-8">
+      <div class="giscus"></div>
+    </section>
   </main>
+  <script is:inline>
+    const giscusTheme = localStorage.theme === "dark" ? "dark_dimmed" : "light"
+    const giscusConfig = {
+      src: "https://giscus.app/client.js",
+      "data-repo": "TunkShif/tunkshif.one",
+      "data-repo-id": "R_kgDOG7vTNQ",
+      "data-category": "General",
+      "data-category-id": "DIC_kwDOG7vTNc4CRPRi",
+      "data-mapping": "pathname",
+      "data-strict": "0",
+      "data-reactions-enabled": "1",
+      "data-emit-metadata": "0",
+      "data-input-position": "bottom",
+      "data-theme": giscusTheme,
+      "data-lang": "en",
+      "data-loading": "lazy",
+      crossorigin: "anonymous",
+      async: ""
+    }
+    const giscusScript = document.createElement("script")
+    Object.entries(giscusConfig).forEach(([key, value]) =>
+      giscusScript.setAttribute(key, value)
+    )
+    document.body.appendChild(giscusScript)
+
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains("dark")
+      const iframe = document.querySelector("iframe.giscus-frame")
+      if (!iframe) return
+      iframe.contentWindow.postMessage(
+        {
+          giscus: {
+            setConfig: {
+              theme: isDark ? "dark_dimmed" : "light"
+            }
+          }
+        },
+        "https://giscus.app"
+      )
+    })
+    observer.observe(document.documentElement, { attributes: true })
+  </script>
 </Layout>

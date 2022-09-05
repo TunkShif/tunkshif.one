@@ -8,8 +8,6 @@ module.exports = {
       mono: [
         "Fira Code",
         "Source Code Pro",
-        "Roboto Mono",
-        "Droid Sans Mono",
         "ui-monospace",
         "SFMono-Regular"
       ],
