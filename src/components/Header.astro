@@ -1,6 +1,6 @@
 ---
+import NavMenu from "@components/NavMenu"
 import ThemeToggle from "@components/ThemeToggle"
-import DropdownMenu from "@components/DropdownMenu"
 
 const links = [
   { text: "Home", route: "/" },
@@ -54,7 +54,7 @@ const links = [
           ></path>
         </svg>
       </a>
-      <DropdownMenu client:visible />
+      <NavMenu client:visible />
     </div>
   </div>
 </header>

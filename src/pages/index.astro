@@ -1,7 +1,7 @@
 ---
 import type { Frontmatter } from "../types"
-import dayjs from "dayjs"
 import Layout from "@layouts/Layout.astro"
+import dayjs from "dayjs"
 import intro from "../data/intro.json"
 
 const posts = (await Astro.glob<Frontmatter>("./posts/*.md"))
