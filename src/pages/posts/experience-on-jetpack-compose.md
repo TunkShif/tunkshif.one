@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/BlogLayout.astro
 title: Jetpack Compose 初尝体验
-date: 2022-03-10
+pubDate: 2022-03-10
 tags: ["android", "kotlin"]
 language: zh
 ---

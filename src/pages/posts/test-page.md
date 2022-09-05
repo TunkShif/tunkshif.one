@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/BlogLayout.astro
 title: How to Blog
-date: 2022-09-03
+pubDate: 2022-09-03
 tags: ["blog", "nextjs"]
 lang: en
 ---

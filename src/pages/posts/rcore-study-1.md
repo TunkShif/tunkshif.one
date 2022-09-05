@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/BlogLayout.astro
 title: rCore 学习记录 1 - 构建最小内核
-date: 2022-03-20
+pubDate: 2022-03-20
 tags: ["rcore", "os", "rust"]
 language: zh
 ---

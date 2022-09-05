@@ -7,8 +7,8 @@ import intro from "../data/intro.json"
 const posts = (await Astro.glob<Frontmatter>("./posts/*.md"))
   .sort(
     (a, b) =>
-      new Date(b.frontmatter.date).valueOf() -
-      new Date(a.frontmatter.date).valueOf()
+      new Date(b.frontmatter.pubDate).valueOf() -
+      new Date(a.frontmatter.pubDate).valueOf()
   )
   .slice(0, 5)
 ---
@@ -71,7 +71,7 @@ const posts = (await Astro.glob<Frontmatter>("./posts/*.md"))
                   {post.frontmatter.title}
                 </a>
                 <time class="hidden md:block text-gray-600 dark:text-gray-400">
-                  {dayjs(post.frontmatter.date).format("MM/DD/YYYY")}
+                  {dayjs(post.frontmatter.pubDate).format("MM/DD/YYYY")}
                 </time>
               </div>
             </li>

@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/BlogLayout.astro
 title: Zig Language Cheatsheet
-date: 2022-07-21
+pubDate: 2022-07-21
 tags: ["zig"]
 language: en
 ---

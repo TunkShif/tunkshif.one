@@ -1,12 +1,43 @@
 ---
 import type { Frontmatter } from "../types"
-import PostsLayout from "@layouts/PostsLayout.astro";
+import Layout from "@layouts/Layout.astro"
+import dayjs from "dayjs"
 
 const posts = (await Astro.glob<Frontmatter>("./posts/*.md")).sort(
   (a, b) =>
-    new Date(b.frontmatter.date).valueOf() -
-    new Date(a.frontmatter.date).valueOf()
+    new Date(b.frontmatter.pubDate).valueOf() -
+    new Date(a.frontmatter.pubDate).valueOf()
 )
 ---
 
-<PostsLayout title="All Posts" posts={posts}/>
+<Layout title="All Posts - tunkshif.one">
+  <main>
+    <h1 class="mb-6 font-semibold text-3xl text-slate-700 dark:text-gray-50">All Posts</h1>
+    <ul class="space-y-4">
+      {
+        posts.map((post) => (
+          <li>
+            <div>
+              <h2 class="mb-1">
+                <a
+                  href={post.url}
+                  class="text-lg text-gray-700 dark:text-gray-50 font-medium hover:underline"
+                >
+                  {post.frontmatter.title}
+                </a>
+                {post.frontmatter.language === "zh" && (
+                  <span class="ml-2 inline-flex select-none items-center justify-center rounded-sm border border-gray-700 px-1 text-xs dark:border-gray-200">
+                    中文
+                  </span>
+                )}
+              </h2>
+              <time class="text-gray-600 dark:text-gray-400">
+                {dayjs(post.frontmatter.pubDate).format("MM/DD/YYYY")}
+              </time>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</Layout>

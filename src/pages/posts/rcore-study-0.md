@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/BlogLayout.astro
 title: rCore 学习记录 0 - 实验准备
-date: 2022-03-16
+pubDate: 2022-03-16
 tags: ["rcore", "os", "rust"]
 language: zh
 ---

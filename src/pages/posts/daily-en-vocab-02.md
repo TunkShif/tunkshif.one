@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/BlogLayout.astro
 title: Daily English Vocabulary - Week 2
-date: 2022-04-13
+pubDate: 2022-04-13
 tags: ["english", "vocabulary"]
 language: zh
 ---

@@ -1,7 +1,7 @@
 ---
 layout: ../../layouts/BlogLayout.astro
 title: Daily English Vocabulary - Week 1
-date: 2022-04-05
+pubDate: 2022-04-05
 tags: ["english", "vocabulary"]
 language: zh
 ---
