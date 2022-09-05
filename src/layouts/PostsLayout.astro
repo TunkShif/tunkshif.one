@@ -1,0 +1,45 @@
+---
+import type { MarkdownInstance } from "astro"
+import type { Frontmatter } from "src/types"
+import Layout from "./Layout.astro"
+import dayjs from "dayjs"
+
+export interface Props {
+  title: string
+  posts: MarkdownInstance<Frontmatter>[]
+}
+
+const { title, posts } = Astro.props
+---
+
+<Layout title={`${title} - tunkshif.one`}>
+  <main>
+    <h1 class="mb-6 font-semibold text-3xl text-slate-700">{title}</h1>
+    <ul class="space-y-4">
+      {
+        posts.map((post) => (
+          <li>
+            <div>
+              <h2 class="mb-1">
+                <a
+                  href={post.url}
+                  class="text-lg text-gray-700 font-medium hover:underline"
+                >
+                  {post.frontmatter.title}
+                </a>
+                {post.frontmatter.language === "zh" && (
+                  <span class="ml-2 inline-flex select-none items-center justify-center rounded-sm border border-gray-700 px-1 text-xs dark:border-gray-200">
+                    中文
+                  </span>
+                )}
+              </h2>
+              <time class="text-gray-600 dark:text-gray-400">
+                {dayjs(post.frontmatter.date).format("MM/DD/YYYY")}
+              </time>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</Layout>
