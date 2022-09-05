@@ -44,6 +44,7 @@ export default function ThemeToggle() {
 
   return (
     <button
+      aria-label="Switch Theme"
       className="inline-flex justify-center items-center"
       onClick={() => {
         let target = ""

@@ -11,7 +11,10 @@ export default function DropdownMenu() {
   return (
     <Primitive.Root>
       <Primitive.Trigger asChild>
-        <button className="ml-2 inline-flex md:hidden justify-center items-center">
+        <button
+          aria-label="Menu"
+          className="ml-2 inline-flex md:hidden justify-center items-center"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"

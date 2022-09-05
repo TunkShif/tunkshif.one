@@ -26,7 +26,12 @@ const posts = (await Astro.glob<Frontmatter>("./posts/*.md"))
       }
       <ul class="mt-6 flex space-x-4 md:space-x-2">
         <li>
-          <a href="https://twitter.com/TunkShif" target="_blank">
+          <a
+            href="https://twitter.com/TunkShif"
+            role="button"
+            aria-label="Twitter"
+            target="_blank"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"
@@ -40,7 +45,12 @@ const posts = (await Astro.glob<Frontmatter>("./posts/*.md"))
           </a>
         </li>
         <li>
-          <a href="https://github.com/TunkShif" target="_blank">
+          <a
+            href="https://github.com/TunkShif"
+            role="button"
+            aria-label="Github"
+            target="_blank"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 496 512"
