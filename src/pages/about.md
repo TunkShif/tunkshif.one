@@ -6,7 +6,7 @@ title: About Me
 ```elixir
 def me do
   %{
-    name: ["Tristan Young"],
+    name: ["Tristan Yang", "杨宇恒 (Yáng Yǔhéng)"],
     alias: "TunkShif",
     email: "tunkshif@foxmail.com",
     location: {"Sichuan", "China"},
