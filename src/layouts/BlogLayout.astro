@@ -36,6 +36,11 @@ const { title, tags, pubDate } = Astro.props.frontmatter as Frontmatter
       <div class="giscus"></div>
     </section>
   </main>
+  <style is:inline>
+    .katex-display {
+      overflow: auto hidden;
+    }
+  </style>
   <script is:inline>
     const giscusTheme = localStorage.theme === "dark" ? "dark_dimmed" : "light"
     const giscusConfig = {

@@ -40,14 +40,14 @@ The distinction between analytic and (poly)synthetic languages is not a bipartit
 
 Consider the examples below.
 
-$
+$$
 \begin{array}{llll}
   read & read-s & read-er & read-able \\
   write & write-s & write-er & write-able \\
   kind & kind-ness & un-kind \\
   happy & happi-ness & un-happy
 \end{array}
-$
+$$
 
 These words are easily segmented, i.e. broken up into individually meaningful parts. These parts are called **morphemes**. Morphemes can be defined as the smallest meaningful constituents of a linguistic expression.
 
@@ -81,10 +81,10 @@ Lexemes are like sets of word-forms, and every word-form belongs to one lexeme. 
 
 A set of related lexemes is called a **word family**. For example, here are two English word families.
 
-$
+$$
 \text{a. }\small \text{READ, READABLE, UNREADABLE, READER, READABILITY, READER} \\
 \text{b. }\small \text{LOGIC, LOGICIAN, LOGICAL, ILLOGICAL, ILLOGICALITY}
-$
+$$
 
 ### Why Different Morphological Relationships?
 
@@ -133,23 +133,23 @@ A base may or may not be able to function as a word-form. For example, in Englis
 
 Roots and affixed can generally be distinguished quite easily, but in some languages they are not. For example, the Salishan language Bella Coola has a number of suffix-like elements that do have concrete meanings.
 
-$
+$$
 \begin{array}{llll}
   \textit{-us} & '\text{face}' & \textit{-lik} & '\text{body}' \\
   \textit{-an} & '\text{'ear'}' & \textit{-altwa} & '\text{sky, weather}' \\
   \textit{-uc} & '\text{'mouth'}' & \textit{-lt} & '\text{child}'
 \end{array}
-$
+$$
 
 English has a number of morphemes that are similarly difficult to classify as roots or affixes, too.
 
-$
+$$
 \begin{array}{ll}
   biogeography & aristocrat \\
   bioethics & autocrat \\
   bioengineering & democrat
 \end{array}
-$
+$$
 
 The elements $$\textit{bio-}$$ and $$\textit{-crat}$$ could be regarded as affixes because they do not occur as independent lexemes, but their meaning are very concrete and could be regarded as bound stems that have the special property of occurring only in compounds.
 
