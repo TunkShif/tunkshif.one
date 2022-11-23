@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react"
+import * as Switch from "@radix-ui/react-switch"
+import cx from "classnames"
 
 const MoonIcon = (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 20 20"
     fill="currentColor"
-    className="w-7 h-7 md:w-6 md:h-6 text-gray-500 dark:text-gray-100 opacity-80 hover:opacity-100"
+    className="w-3 h-3 text-gray-300"
   >
     <path
       fillRule="evenodd"
       d="M7.455 2.004a.75.75 0 01.26.77 7 7 0 009.958 7.967.75.75 0 011.067.853A8.5 8.5 0 116.647 1.921a.75.75 0 01.808.083z"
       clipRule="evenodd"
-    ></path>
+    />
   </svg>
 )
 
@@ -20,7 +22,7 @@ const SunIcon = (
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 20 20"
     fill="currentColor"
-    className="w-7 h-7 md:w-6 md:h-6 text-gray-500 dark:text-gray-100 opacity-80 hover:opacity-100"
+    className="w-3 h-3 text-gray-500"
   >
     <path d="M10 2a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 2zM10 15a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 15zM10 7a3 3 0 100 6 3 3 0 000-6zM15.657 5.404a.75.75 0 10-1.06-1.06l-1.061 1.06a.75.75 0 001.06 1.06l1.06-1.06zM6.464 14.596a.75.75 0 10-1.06-1.06l-1.06 1.06a.75.75 0 001.06 1.06l1.06-1.06zM18 10a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0118 10zM5 10a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 015 10zM14.596 15.657a.75.75 0 001.06-1.06l-1.06-1.061a.75.75 0 10-1.06 1.06l1.06 1.06zM5.404 6.464a.75.75 0 001.06-1.06l-1.06-1.06a.75.75 0 10-1.061 1.06l1.06 1.06z" />
   </svg>
@@ -42,22 +44,43 @@ export default function ThemeToggle() {
     }
   }, [theme])
 
+  const handleChange = () => {
+    let target = ""
+    if (theme === "dark") {
+      target = "light"
+    } else {
+      target = "dark"
+    }
+    setTheme(target)
+    localStorage.setItem("theme", target)
+  }
+
   return (
-    <button
-      aria-label="Switch Theme"
-      className="inline-flex justify-center items-center"
-      onClick={() => {
-        let target = ""
-        if (theme === "dark") {
-          target = "light"
-        } else {
-          target = "dark"
-        }
-        setTheme(target)
-        localStorage.setItem("theme", target)
-      }}
+    <Switch.Root
+      className={cx(
+        "group",
+        "radix-state-unchecked:bg-gray-200 dark:radix-state-unchecked:bg-gray-800",
+        "relative h-[24px] w-[44px] rounded-full cursor-pointer",
+        "inline-flex flex-shrink-0 items-center transition duration-200 ease-in-out",
+        "dark:ring-1 dark:ring-white/10 dark:ring-inset"
+      )}
+      checked={theme === "dark"}
+      onCheckedChange={handleChange}
     >
-      {theme === "dark" ? SunIcon : MoonIcon}
-    </button>
+      <Switch.Thumb asChild>
+        {theme === null ? null : (
+          <span
+            className={cx(
+              "flex justify-center items-center",
+              "group-radix-state-checked:translate-x-5",
+              "group-radix-state-unchecked:translate-x-0",
+              "pointer-events-none inline-block h-[22px] w-[22px] transform rounded-full bg-white dark:bg-slate-800 shadow-lg ring-0 transition duration-200 ease-in-out"
+            )}
+          >
+            {theme === "dark" ? MoonIcon : SunIcon}
+          </span>
+        )}
+      </Switch.Thumb>
+    </Switch.Root>
   )
 }

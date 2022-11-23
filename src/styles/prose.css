@@ -1,0 +1,12 @@
+.katex-display {
+  overflow: auto hidden;
+}
+
+pre[class*="language-"] {
+  background-color: #1e293b;
+  @apply rounded-md shadow-lg overflow-hidden dark:ring-1 dark:ring-white/10 dark:ring-inset;
+}
+
+pre code[class*="language-"] {
+  background-color: transparent;
+}

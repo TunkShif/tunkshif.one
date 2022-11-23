@@ -1,6 +1,7 @@
 ---
-import Layout from "./Layout.astro"
+import Layout from "@layouts/Layout.astro"
 import "prism-themes/themes/prism-one-dark.css"
+import "../styles/prose.css"
 
 const title = Astro.props.frontmatter.title
 ---
@@ -9,7 +10,12 @@ const title = Astro.props.frontmatter.title
   <main>
     <h1 class="mb-4 text-4xl font-extrabold">{title}</h1>
     <article
-      class="prose mx-auto max-w-4xl prose-blockquote:font-normal prose-blockquote:not-italic prose-code:font-normal prose-code:font-mono prose-code:before:content-none prose-code:after:content-none dark:prose-invert prose-code:rounded-sm prose-code:bg-gray-200 prose-code:pt-0.5 prose-code:text-gray-500 dark:prose-code:bg-[#282c34] dark:prose-code:text-gray-200"
+      class:list={[
+        "mx-auto max-w-4xl prose dark:prose-invert",
+        "prose-blockquote:font-normal prose-blockquote:not-italic",
+        "prose-code:font-normal prose-code:font-mono prose-code:rounded-sm",
+        "prose-code:bg-[#1e293b] prose-code:text-[rgb(171,178,191)]"
+      ]}
     >
       <slot />
     </article>

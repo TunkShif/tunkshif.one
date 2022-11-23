@@ -1,13 +1,9 @@
 ---
-import type { Frontmatter } from "../types"
 import Layout from "@layouts/Layout.astro"
 import dayjs from "dayjs"
+import { sortedPosts } from "../utils"
 
-const posts = (await Astro.glob<Frontmatter>("./posts/*.md")).sort(
-  (a, b) =>
-    new Date(b.frontmatter.pubDate).valueOf() -
-    new Date(a.frontmatter.pubDate).valueOf()
-)
+const posts = sortedPosts(await Astro.glob("./posts/*.mdx"))
 ---
 
 <Layout title="All Posts - tunkshif.one">
@@ -15,7 +11,7 @@ const posts = (await Astro.glob<Frontmatter>("./posts/*.md")).sort(
     <h1 class="mb-6 font-semibold text-3xl text-slate-700 dark:text-gray-50">All Posts</h1>
     <ul class="space-y-4">
       {
-        posts.map((post) => (
+        posts.map(post => (
           <li>
             <div>
               <h2 class="mb-1">

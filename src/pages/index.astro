@@ -1,16 +1,10 @@
 ---
-import type { Frontmatter } from "../types"
 import Layout from "@layouts/Layout.astro"
 import dayjs from "dayjs"
+import { sortedPosts } from "../utils"
 import intro from "../data/intro.json"
 
-const posts = (await Astro.glob<Frontmatter>("./posts/*.md"))
-  .sort(
-    (a, b) =>
-      new Date(b.frontmatter.pubDate).valueOf() -
-      new Date(a.frontmatter.pubDate).valueOf()
-  )
-  .slice(0, 5)
+const posts = sortedPosts(await Astro.glob("./posts/*.mdx")).slice(0, 5)
 ---
 
 <Layout title="tunkshif.one">
@@ -19,19 +13,10 @@ const posts = (await Astro.glob<Frontmatter>("./posts/*.md"))
       <h1 class="mb-6 font-semibold text-4xl text-slate-700 dark:text-gray-50">
         {intro.title}
       </h1>
-      {
-        intro.texts.map((text) => (
-          <p class="md:py-1 text-lg md:text-base leading-loose">{text}</p>
-        ))
-      }
+      {intro.texts.map(text => <p class="md:py-1 text-lg md:text-base leading-loose">{text}</p>)}
       <ul class="mt-6 flex space-x-4 md:space-x-2">
         <li>
-          <a
-            href="https://twitter.com/TunkShif"
-            role="button"
-            aria-label="Twitter"
-            target="_blank"
-          >
+          <a href="https://twitter.com/TunkShif" role="button" aria-label="Twitter" target="_blank">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"
@@ -45,12 +30,7 @@ const posts = (await Astro.glob<Frontmatter>("./posts/*.md"))
           </a>
         </li>
         <li>
-          <a
-            href="https://github.com/TunkShif"
-            role="button"
-            aria-label="Github"
-            target="_blank"
-          >
+          <a href="https://github.com/TunkShif" role="button" aria-label="Github" target="_blank">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 496 512"
@@ -66,12 +46,10 @@ const posts = (await Astro.glob<Frontmatter>("./posts/*.md"))
       </ul>
     </section>
     <section class="my-10 md:my-8">
-      <h1 class="mb-6 font-semibold text-2xl text-slate-700 dark:text-gray-50">
-        Recent Posts
-      </h1>
+      <h1 class="mb-6 font-semibold text-2xl text-slate-700 dark:text-gray-50">Recent Posts</h1>
       <ul>
         {
-          posts.map((post) => (
+          posts.map(post => (
             <li>
               <div class="py-1 md:py-2 text-lg md:text-base flex justify-between items-center leading-loose">
                 <a
@@ -90,9 +68,7 @@ const posts = (await Astro.glob<Frontmatter>("./posts/*.md"))
       </ul>
     </section>
     <section class="my-10 md:my-8">
-      <h1 class="mb-6 font-semibold text-2xl text-slate-700 dark:text-gray-50">
-        My Projects
-      </h1>
+      <h1 class="mb-6 font-semibold text-2xl text-slate-700 dark:text-gray-50">My Projects</h1>
     </section>
   </main>
 </Layout>

@@ -12,9 +12,11 @@
   "dependencies": {
     "@astrojs/rss": "^1.0.0",
     "@fontsource/inter": "^4.5.12",
-    "@fontsource/outfit": "^4.5.9",
+    "@fontsource/outfit": "^4.5.10",
     "@radix-ui/react-dropdown-menu": "^1.0.0",
+    "@radix-ui/react-switch": "^1.0.1",
     "astro": "^1.1.5",
+    "classnames": "^2.3.2",
     "dayjs": "^1.11.5",
     "katex": "^0.16.2",
     "prism-themes": "^1.9.0",
@@ -22,6 +24,7 @@
     "remark-math": "^5.1.1"
   },
   "devDependencies": {
+    "@astrojs/mdx": "^0.11.6",
     "@astrojs/react": "^1.1.1",
     "@astrojs/sitemap": "^1.0.0",
     "@astrojs/tailwind": "^1.0.0",
@@ -29,6 +32,7 @@
     "@types/react": "^18.0.18",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwindcss": "^3.1.8"
+    "tailwindcss": "^3.1.8",
+    "tailwindcss-radix": "^2.6.1"
   }
 }

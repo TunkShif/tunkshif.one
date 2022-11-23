@@ -1,60 +1,52 @@
 ---
 import NavMenu from "@components/NavMenu"
-import ThemeToggle from "@components/ThemeToggle"
+import ThemeSwitch from "@components/ThemeSwitch"
 
 const links = [
   { text: "Home", route: "/" },
   { text: "Posts", route: "/posts" },
+  { text: "RSS", route: "/rss.xml" },
   { text: "About", route: "/about" }
 ]
 ---
 
-<header class="my-8 flex justify-between">
-  <div>
-    <a
-      class="font-display font-semibold text-2xl text-slate-700 select-none dark:text-gray-50"
-      href="/"
-    >
-      tunkshif.one
-    </a>
-  </div>
-  <div class="flex items-center">
-    <nav class="hidden md:block mt-0.5">
-      <ul class="flex items-center space-x-4">
-        {
-          links.map((link) => (
-            <li>
-              <a class="font-medium hover:underline" href={link.route}>
-                {link.text}
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-    <div class="ml-4 flex items-center">
-      <ThemeToggle client:visible />
+<header
+  class:list={[
+    "sticky w-full top-0 z-50 backdrop-blur",
+    "border-b border-slate-900/10 dark:border-slate-50/[0.06]",
+    "bg-white/95 supports-backdrop-blur:bg-white/60 dark:bg-transparent"
+  ]}
+>
+  <div class="mx-4 md:mx-16 py-4 md:py-3 flex justify-between">
+    <div>
       <a
-        href="/rss.xml"
-        role="button"
-        aria-label="RSS"
-        class="ml-2 inline-flex justify-center items-center"
+        class:list={[
+          "inline-block font-display font-semibold text-2xl text-slate-700 dark:text-gray-50",
+          "select-none transform transition-transform duration-200 hover:-translate-y-1"
+        ]}
+        href="/"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          class="w-7 h-7 md:w-6 md:h-6 text-gray-500 dark:text-gray-100 opacity-80 hover:opacity-100"
-        >
-          <path
-            d="M3.75 3a.75.75 0 00-.75.75v.5c0 .414.336.75.75.75H4c6.075 0 11 4.925 11 11v.25c0 .414.336.75.75.75h.5a.75.75 0 00.75-.75V16C17 8.82 11.18 3 4 3h-.25z"
-          ></path>
-          <path
-            d="M3 8.75A.75.75 0 013.75 8H4a8 8 0 018 8v.25a.75.75 0 01-.75.75h-.5a.75.75 0 01-.75-.75V16a6 6 0 00-6-6h-.25A.75.75 0 013 9.25v-.5zM7 15a2 2 0 11-4 0 2 2 0 014 0z"
-          ></path>
-        </svg>
+        tunkshif.one
       </a>
-      <NavMenu client:visible />
+    </div>
+    <div class="flex items-center">
+      <nav class="hidden md:block mt-0.5">
+        <ul class="flex items-center space-x-6">
+          {
+            links.map(link => (
+              <li>
+                <a class="font-medium hover:underline" href={link.route}>
+                  {link.text}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <div class="ml-4 pl-4 flex items-center md:border-l border-slate-300 dark:border-slate-700">
+        <ThemeSwitch client:visible />
+        <NavMenu client:visible />
+      </div>
     </div>
   </div>
 </header>
