@@ -20,7 +20,7 @@ const BarsIcon = (
 )
 
 const NavMenu: Component<{ links: { text: string; route: string }[] }> = props => {
-  const [isExpanded, setIsExpanded] = createSignal(true)
+  const [isExpanded, setIsExpanded] = createSignal(false)
 
   return (
     <>
