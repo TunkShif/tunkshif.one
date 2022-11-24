@@ -1,0 +1,6 @@
+[
+  { "text": "Home", "route": "/" },
+  { "text": "Posts", "route": "/posts" },
+  { "text": "RSS", "route": "/rss.xml" },
+  { "text": "About", "route": "/about" }
+]

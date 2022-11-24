@@ -31,7 +31,7 @@ const SunIcon = (
 export default function ThemeToggle() {
   const [theme, setTheme] = useState<string | null>(null)
 
-  useEffect(() => {
+useEffect(() => {
     if (import.meta.env.SSR) return
     setTheme(localStorage.getItem("theme"))
   }, [])

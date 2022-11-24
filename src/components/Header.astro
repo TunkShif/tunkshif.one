@@ -1,13 +1,7 @@
 ---
-import NavMenu from "@components/NavMenu"
-import ThemeSwitch from "@components/ThemeSwitch"
-
-const links = [
-  { text: "Home", route: "/" },
-  { text: "Posts", route: "/posts" },
-  { text: "RSS", route: "/rss.xml" },
-  { text: "About", route: "/about" }
-]
+import ThemeToggle from "@components/ThemeToggle"
+import links from "../data/navs.json"
+import NavMenu from "./NavMenu"
 ---
 
 <header
@@ -17,35 +11,39 @@ const links = [
     "bg-white/95 supports-backdrop-blur:bg-white/60 dark:bg-transparent"
   ]}
 >
-  <div class="mx-4 md:mx-16 py-4 md:py-3 flex justify-between">
-    <div>
-      <a
-        class:list={[
-          "inline-block font-display font-semibold text-2xl text-slate-700 dark:text-gray-50",
-          "select-none transform transition-transform duration-200 hover:-translate-y-1"
-        ]}
-        href="/"
-      >
-        tunkshif.one
-      </a>
-    </div>
-    <div class="flex items-center">
-      <nav class="hidden md:block mt-0.5">
-        <ul class="flex items-center space-x-6">
-          {
-            links.map(link => (
-              <li>
-                <a class="font-medium hover:underline" href={link.route}>
-                  {link.text}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
-      <div class="ml-4 pl-4 flex items-center md:border-l border-slate-300 dark:border-slate-700">
-        <ThemeSwitch client:only="react" />
-        <NavMenu client:visible />
+  <div id="navbar-wrapper" class="mx-4 md:mx-16 py-4 md:py-3">
+    <div class="flex justify-between">
+      <div>
+        <a
+          class:list={[
+            "inline-block font-display font-semibold text-2xl text-slate-700 dark:text-gray-50",
+            "select-none transform transition-transform duration-200 hover:-translate-y-1"
+          ]}
+          href="/"
+        >
+          tunkshif.one
+        </a>
+      </div>
+      <div class="hidden md:flex items-center">
+        <nav class="mt-0.5">
+          <ul class="flex items-center space-x-6">
+            {
+              links.map(link => (
+                <li>
+                  <a class="font-medium hover:underline" href={link.route}>
+                    {link.text}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+        <div class="ml-4 pl-4 flex items-center md:border-l border-slate-300 dark:border-slate-700">
+          <ThemeToggle client:load />
+        </div>
+      </div>
+      <div class="flex items-center md:hidden">
+        <NavMenu links={links} client:visible />
       </div>
     </div>
   </div>
