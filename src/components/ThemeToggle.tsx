@@ -3,7 +3,7 @@ import { Component, createEffect, createSignal, onMount, Show } from "solid-js"
 import { MoonIcon, SunIcon } from "./Icons"
 
 const trackClasses =
-  "relative inline-flex flex-shrink-0 items-center h-[24px] w-[44px] bg-gray-50 dark:bg-transparent rounded-full ring-1 ring-inset ring-gray-100 hover:ring-gray-300 dark:ring-white/10 hover:dark:ring-white/20 cursor-pointer transition duration-200 ease-in-out"
+  "relative inline-flex flex-shrink-0 items-center h-[24px] w-[44px] bg-gray-100 dark:bg-transparent rounded-full ring-1 ring-inset ring-gray-100 hover:ring-gray-300 dark:ring-white/10 hover:dark:ring-white/20 cursor-pointer transition duration-200 ease-in-out"
 
 const ThemeToggle: Component = () => {
   const [isMounted, setIsMounted] = createSignal(false)

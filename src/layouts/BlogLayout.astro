@@ -37,8 +37,9 @@ const { title, tags, pubDate } = Astro.props.frontmatter as Frontmatter
       class:list={[
         "mx-auto max-w-4xl prose dark:prose-invert",
         "prose-blockquote:font-normal prose-blockquote:not-italic",
-        "prose-code:font-normal prose-code:font-mono prose-code:rounded-sm",
-        "prose-code:bg-[#1e293b] prose-code:text-[rgb(171,178,191)]"
+        "prose-code:px-1 prose-code:font-normal prose-code:font-mono prose-code:rounded-sm",
+        "prose-code:bg-gray-100 prose-code:text-gray-700",
+        "dark:prose-code:bg-[#1e293b] dark:prose-code:text-[rgb(171,178,191)]"
       ]}
     >
       <slot />

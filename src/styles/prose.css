@@ -8,5 +8,7 @@ pre[class*="language-"] {
 }
 
 pre code[class*="language-"] {
+  padding-left: 0;
+  padding-right: 0;
   background-color: transparent;
 }

@@ -16,7 +16,7 @@ const params = {
   file: file,
   view: withEditor || "preview",
   hideNavigation: "1",
-  hideDevTools: !withConsole,
+  hideDevTools: !withConsole && "1",
   ctl: clickToLoad && "1"
 } as Record<string, any>
 Object.keys(params).forEach((key) =>
