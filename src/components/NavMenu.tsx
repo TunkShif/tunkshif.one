@@ -1,25 +1,9 @@
 import { Portal } from "solid-js/web"
 import { Component, createSignal, For, Show } from "solid-js"
 import ThemeToggle from "./ThemeToggle"
+import { BarsIcon } from "./Icons"
 
-const BarsIcon = (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke-width="1.5"
-    stroke="currentColor"
-    class="w-6 h-6"
-  >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-    />
-  </svg>
-)
-
-const NavMenu: Component<{ links: { text: string; route: string }[] }> = props => {
+const NavMenu: Component<{ links: { text: string; route: string }[] }> = (props) => {
   const [isExpanded, setIsExpanded] = createSignal(false)
 
   return (
@@ -28,14 +12,14 @@ const NavMenu: Component<{ links: { text: string; route: string }[] }> = props =
         onClick={() => setIsExpanded(!isExpanded())}
         class="flex justify-center items-center w-8 h-8 text-slate-500 hover:text-slate-600 dark:text-slate-300 dark:hover:text-slate-200"
       >
-        {BarsIcon}
+        <BarsIcon class="w-6 h-6" />
       </button>
       <Portal mount={document.getElementById("navbar-wrapper")!}>
         <Show when={isExpanded()}>
           <div class="mx-4 mt-4">
             <ul class="flex justify-between items-center space-x-8">
               <For each={props.links}>
-                {item => (
+                {(item) => (
                   <li>
                     <a class="font-medium" href={item.route}>
                       {item.text}
