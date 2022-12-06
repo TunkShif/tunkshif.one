@@ -9,6 +9,15 @@
     }
   },
   {
+    "name": "sprout-ui",
+    "description": "Component library for Phoenix Framework",
+    "icons": ["elixir", "typescript"],
+    "links": {
+      "github": "https://github.com/TunkShif/sprout_ui",
+      "website": "https://sprout-ui.tunkshif.one"
+    }
+  },
+  {
     "name": "anki-azul-template",
     "description": "Custom card templates for Anki",
     "icons": ["html5"],
