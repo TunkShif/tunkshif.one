@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+cat <<EOF > src/pages/posts/"$1".mdx
+---
+layout: ../../layouts/BlogLayout.astro
+title: 
+pubDate: $(date +"%Y-%m-%d")
+tags: []
+language: zh
+---
+EOF
