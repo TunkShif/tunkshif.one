@@ -16,7 +16,7 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
     <Card className="group h-full transform transition duration-300 hover:-translate-y-1 hover:scale-[1.01]">
       <div className="flex h-full flex-col @md:min-h-[248px] @md:flex-row @md:group-even:flex-row-reverse">
         <Banner
-          className="shrink-0 basis-40 @md:flex-[2] @md:basis-auto"
+          className="shrink-0 basis-40 @md:flex-[2] @md:basis-4"
           banner={article.banner}
           href={article.url}
         />
@@ -55,12 +55,12 @@ const Banner = ({
 
   return (
     <div className={className}>
-      <Link href={href} className="relative block h-full w-full">
+      <Link href={href} className="relative block aspect-[2/1] h-full w-full">
         <Image
           {...img}
           quality={90}
           alt={banner?.description || "banner image"}
-          className="rounded-t-md object-cover @md:rounded-none @md:group-odd:rounded-l-md @md:group-even:rounded-r-md"
+          className="h-full w-full rounded-t-md object-cover @md:rounded-none @md:group-odd:rounded-l-md @md:group-even:rounded-r-md"
         />
       </Link>
     </div>
