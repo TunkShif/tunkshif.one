@@ -1,14 +1,5 @@
-.katex-display {
-  overflow: auto hidden;
-}
-
-pre[class*="language-"] {
-  background-color: #1e293b;
-  @apply my-4 rounded-md shadow-lg dark:ring-1 dark:ring-white/10 dark:ring-inset;
-}
-
-pre code[class*="language-"] {
-  padding-left: 0;
-  padding-right: 0;
-  background-color: transparent;
+.prose {
+  [data-footnote-backref] {
+    @apply font-serif;
+  }
 }

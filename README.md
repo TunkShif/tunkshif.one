@@ -1,8 +1,15 @@
 ## TODO
+
+- Migrate to Next
+- pagination
 - SEO
+- OG Graph
+- tags
+- search
+- zod
+
+- Image Optimization
 - robots.txt
 - About Page
-- Image Optimization
 - Comments
-- og graph
 - extract theme tokens

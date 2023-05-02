@@ -1,0 +1,414 @@
+---
+type: Article
+title: Python 杂项知识点的学习笔记
+created: 2020-08-16
+updated: 2020-08-16
+tags: ["python"]
+language: zh
+---
+
+> *黑历史文章系列*
+
+## 不可变对象
+
+例如字符串等的不可变对象，对其调用例如 `replace` 之类的方法并不会改变该对象本身，而是会返回一个新的字符串对象
+
+```python
+a = "abc"
+b = a.replace("a", "A")
+```
+
+## 基础数据类型
+
+### 元组
+
+声明单个元素的元组时，小括号可能会与数学运算中的小括号产生歧义，定义时需要多加一个逗号
+
+```python
+t = () # an empty tuple
+t = (1) # t is a number
+t = (1, ) # a tuple containing one element
+```
+
+元组内的元素是固定不变的，但元组内的可变元素可以发生改变，例如下面这个例子中元组内含有一个列表元素，然而这个列表中的元素是可以发生变化的
+
+```python
+t = (1, 2, ["a", "b"])
+t[2][0] = "x"
+```
+
+### 字典
+
+字典的 `key` 必须是不可变对象，例如字符串或数字甚至是元组
+
+```python
+t = (0, 1)
+dic = []
+dic[t] = "0"
+```
+
+## 函数
+
+### 参数传递
+
+#### 默认参数
+
+指定的默认参数必须在必填参数位置之后
+
+```python
+def test(a, b=1):
+    sum = a + b
+    return sum
+```
+
+默认参数必须时一个**不可变对象**，例如下面的例子
+
+```python
+def test(l=[]):
+    l.append(".")
+    return l
+
+test([1, 2]) # [1, 2, "."]
+test() # ["."]
+test() # [".", "."]
+```
+
+原因是在函数定义时就已经创建出了默认的参数的对象，而每次调用该函数时不会重新创建新的对象而是直接改变最开始创建的默认参数的对象，所以上述的函数可以修改为
+
+```python
+def test(l=None):
+    if l is None:
+        l = []
+    l.append(".")
+    return l
+```
+
+在未传递参数时，默认传入的值为 `None`
+
+#### 可变参数
+
+定义函数时，在参量名前加上一个星号，实际上传入的是含有所有参数的一个元组
+
+```python
+def test(*numbers):
+    sum = 0
+    for num in numbers:
+        sum = sum + num
+    return sum
+
+test(1, 2, 3)
+```
+
+在实际传入参数时也可以传入列表或元组，只需要在传入的变量前加上一个星号，会将里面的元素拆分开传入
+
+```python
+t = (1, 2, 3, 4, 5)
+test(*t)
+```
+
+#### 关键字参数
+
+定义函数时，在参数名前加上两个星号，实际上传入的是一个字典
+
+```python
+def test(**kwargs):
+    return kwargs
+
+test(a=1, b="s") # {'a': 1, 'b': 's'}
+```
+
+同样在传入参数时也可以直接传入一个字典变量，只需要在变量名前加上两个星号
+
+```python
+dic = {'a': 1, 'b': 's'}
+test(**dic)
+```
+
+#### 命名关键字参数
+
+如果需要限制传入的参数的名字，按照如下方式定义函数，用星号来分割
+
+```python
+def test(name, age, *, city, job):
+    print(name, age, city, job)
+```
+
+如果已经有了一个可变参数，那么就不再需要星号分割
+
+```python
+def test(name, age, *args, city, job):
+    print(name, age, args, city, job)
+```
+
+关键字参数传入时必须指定名称
+
+#### 参数组合顺序
+
+必选参数、默认参数、可变参数、命名关键字参数和关键字参数
+
+```python
+def test(a, b, c=0, *args, d, **kwargs):
+    pass
+```
+
+但实际使用时不要指定太多参数组合，会影响函数的可理解性
+
+### 返回值
+
+#### 默认返回 None
+
+在 Python 中即使没有使用 `return` 语句，在调用函数后也会返回 `None`
+
+```python
+def test():
+    pass
+
+a = test()
+print(a) # None
+```
+
+#### 返回多个值
+
+返回多个值时其实返回的是含有所有值的一个元组，而多个变量赋值时可以接收一个元组按次序赋值
+
+```python
+def test(x, y):
+    nx = x + 1
+    ny = y +1
+    return nx, ny
+
+a = test(1, 2) # (2, 3)
+a, b = test(1, 2)
+```
+
+## 高阶特性
+
+### 迭代
+
+`for` 循环可以作用于一个可迭代对象进行循环, 使用 `collections` 模块提供的 `Iterable` 类型可以判断某个对象能否进行迭代
+
+```python
+from collections.abc import Iterable
+print(isinstance("abc", Iterable))
+```
+
+使用 `enumerate` 函数可以将列表变成索引-元素对
+
+```python
+lst = ["a", "b", "c"]
+
+for i, v in enumerate(lst):
+    print(f"#{i}: v")
+```
+
+### 列表生成式
+
+使用类似以下格式的列表生成式可以快速生成指定列表
+
+```python
+lst = [1, 2, 3]
+l = [x * x for x in lst]
+# [1, 4, 9]
+
+l = [(x, y) for x in range(1, 4) for y in range(1, 4) if x != y]
+# [(1, 2), (1, 3), (2, 1), (2, 3), (3, 1), (3, 2)]
+```
+
+### 生成器
+
+将列表生成式格式中的方括号改为圆括号即可得到一个**生成器对象**, 一个列表创建时其中的所有元素也已经创建出来, 如果元素过多会占用大量内存, 而生成器仅仅是保存了生成列表中元素的算法, 仅当被调用时才生成元素
+
+```python
+g = (x * x for x in range(1, 4))
+next(g) # 1
+next(g) # 4
+next(g) # 9
+next(g) # StopIteration Exception
+```
+
+**生成器对象**也是可迭代对象, 因此可以对其使用 `for` 循环
+
+```python
+g = (x * x for x in range(1, 4))
+for i in g:
+    print(i)
+```
+
+含有 `yield` 关键字的函数为一个生成器, 如下面生成斐波那契数列的例子
+
+```python
+def fib(m: int):
+    n, a, b = 0, 0, 1
+    while n < m:
+        yield b
+        a, b = b, a + b
+        n += 1
+    return "DONE"
+
+g = fib(9)
+for i in g:
+    print(i)
+```
+
+使用生成器时，先创建一个**生成器对象**, 然后便可以调用 `next()` 或对其进行迭代来生成值, 执行时遇到 `yield` 便停止执行并返回相应值, 等下一次被调用时再继续执行, 并且用 `for` 循环调用时无法获取原本的返回值, 需要调用 `next()` 捕获异常来获得函数原本的返回值
+
+```python
+g = fib(9)
+while True:
+    try:
+        print(next(g))
+    except StopIteration as e:
+        print(e.value)
+        break
+```
+
+### 迭代器
+
+可以被 `next()` 函数不断调用并返回值直到抛出 `StopIteration` 的对象叫做迭代器 (*Iterator*), 生成器对象都是迭代器, 但列表和字典等数据类型虽然时可迭代对象 (*Iterable*) 但并不是迭代器, 使用 `iter()` 函数可以将可迭代对象转变为迭代器
+
+## 函数式编程
+
+### 高阶函数
+
+#### map/reduce
+
+`map()` 函数接收两个参数, 分别为一个函数和一个可迭代对象, 作用是将该函数依次作用在可迭代对象序列中的所有元素后返回一个新的可迭代对象, 如下面将列表中的整数转化为字符串的例子
+
+```python
+lst = [1, 2, 3]
+l = list(map(str, lst))
+# ["1", "2", "3"]
+```
+
+`reduce()` 函数同样接收上述的两个参数, 但第一个参数接收的函数需要接收两个参数, 将函数作用得到的结果继续与可迭代对象序列中的下一个元素作用, 等价表达如下
+
+```python
+reduce(f, [a, b, c, d])
+f(f(f(a, b), c), d)
+```
+
+#### filter
+
+`filter()`函数同样接收两个参数, 第一个参数为一个判定函数, 第二个参数为一个序列, 将该函数作用于序列的每一个元素, 根据返回的布尔值判断是否保留该元素
+
+```python
+def is_odd(n):
+    return n % 2 == 1
+
+lst = [1, 2, 3, 4, 5]
+odds = filter(is_odd, lst)
+# [1, 3, 5]
+```
+
+#### sorted
+
+`sorted()` 函数用于将数列排序, 也可以额外再接收一个函数实现自定义排序, 如下面例子中的按绝对值大小排序
+
+```python
+lst = [-9, 23, -31, 78, -101]
+l = sorted(lst, key=abs)
+# [-9, 23, -31, 78, -101]
+```
+
+对字符串进行排序时, 是按照字符的 ASCII 码大小进行排序的
+
+```python
+lst = ["a", "Z"]
+l = sorted(lst)
+# ["Z", "a"]
+```
+
+### 闭包
+
+观察下面的例子, 在函数内部定义的新函数并且将其作为返回值, 新函数并不会立即执行, 且其内部的局部变量还会被新的函数再次引用
+
+```python
+def count():
+    fs = []
+    for i in range(1, 4):
+        def f():
+            return i
+        fs.append(f)
+    return fs
+
+f1, f2, f3 = count()
+f1() # 3
+f2() # 3
+f3() # 3
+```
+
+### 匿名函数
+
+使用 `lambda` 关键字创建匿名函数, 同样匿名函数也可以作为函数的返回值
+
+```python
+lst = [1, 2, 3, 4]
+pow_lst = list(map(lambda x: x * x, lst))
+```
+
+```python
+def add(a, b):
+    return lambda: a + b
+```
+
+### 装饰器
+
+装饰器接收一个函数作为参数, 返回一个新函数加强原函数的功能, 一个不带参数的装饰器例子如下
+
+```python
+def log_name(func):
+    def wrapper(*args, **kwargs):
+        print(f"now excuting {func.__name__}")
+        return func(*args, **kwargs)
+    return wrapper
+
+@log_name
+def log():
+    print("Logging...")
+# now excuting log
+# Logging...
+```
+
+实际上 `@decorator` 是一个语法糖, 相当于 `log = log_name(log)`
+
+## 面向对象
+
+### 私有属性
+
+```python
+class Animal(object):
+    def __init__(self, name, age):
+        self.__name = name
+        self.__age = age
+
+    def print_info(self):
+        print(f"Name: {self.__name}\nAge: {self.__age}")
+```
+
+以 `__` 开头的属性只能在类的内部被访问, 无法从外部访问, 实际上它被解释器解释成为了 `_Animal__name`
+
+以 `_` 开头的属性为约定俗成的私有属性, 可以从外部访问但不推荐去使用它
+
+### 继承和多态
+
+从下面的例子可以看出, `Cat` 类型继承自 `Animal` 类型, 而新建的实例 `my_cat` 既属于 `Cat` 类也属于 `Animal` 类, 子类可以继承父类的属性和方法, 也可以重写父类的方法
+
+```python
+class Animal(object):
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def run(self):
+        print(f"{self.name} is running!")
+
+
+class Cat(Animal):
+    def run(self):
+        print(f"Cat {self.name} is running!")
+
+my_cat = Cat("Pickle", 2)
+print(isinstance(my_cat, Animal)) # true
+print(isinstance(my_cat, Cat)) # true
+```
+

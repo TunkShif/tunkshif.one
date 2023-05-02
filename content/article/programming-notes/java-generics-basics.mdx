@@ -1,0 +1,257 @@
+---
+type: Article
+title: Java 泛型编程基础学习记录
+created: 2020-11-16
+updated: 2020-11-16
+tags: ["java"]
+language: zh
+---
+
+> _黑历史文章系列_
+
+# 对泛型的理解
+
+## 泛型概念的引入
+
+我们编写下面一个简单的数组列表类, 实现了设置和读取元素的方法.
+
+```java
+public class MyArrayList {
+    private int size;
+    private Object[] elements;
+
+    public MyArrayList(int size) {
+        this.size = size;
+        this.elements = new Object[size];
+    }
+
+    public Object get(int index) {
+        return elements[index];
+    }
+
+    public void set(int index, Object obj) {
+        this.elements[index] = obj;
+    }
+
+    public String toString() {
+        return Arrays.toString(this.elements);
+    }
+}
+```
+
+在使用该类的时候, 我们可以向其中添加任意类型的元素, 但从中取出元素的时候必须要对其进行强制转型, 才能得到相应类的对象. 在取出元素的时候, 如果我们错误地对其中的元素进行了转型, 就会得到错误的结果, 使用起来有风险. 考虑到该问题, 我们可以为每个类都创建一个自己类型列表, 比如 `MyStringArrayList` `MyIntegerArrayList` 等等, 这样一个列表里面就只能容纳同一种类型的元素, 但该方法始终不方便, 也不可能为 Java 中的所有类都创建一个自己类型的列表类. 于是我们引入了一套类似于模板的方案, 即使用泛型
+
+```java
+public class Main {
+    public static void main(String[] args) {
+        MyArrayList list = new MyArrayList(10);
+        list.set(0, "Test");
+        String s = (String) list.get(0); // cast Object to String
+        System.out.println(s);
+    }
+}
+```
+
+## 编写泛型类
+
+### 一个简单的泛型类示例
+
+下面构建了一个用于存储键值对匹配的类, 只需要在类名后面用一对尖括号 `<>` 指明泛型类型的参数, 在类内部便可以用泛型参数代替类型.
+
+```java
+public class Pair<K, V> {
+    private K key;
+    private V value;
+
+    public Pair(K key, V value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    public K getKey() {
+        return key;
+    }
+
+    public void setKey(K key) {
+        this.key = key;
+    }
+
+    public V getValue() {
+        return value;
+    }
+
+    public void setValue(V value) {
+        this.value = value;
+    }
+}
+```
+
+在创建泛型类示例的时候, 需要在前面类型的尖括号中指定泛型参数的类型, 而在用 `new` 操作符新建对象时尖括号中的内容可以省略.
+
+```java
+Pair<Integer, String> p1 = new Pair<>(0, "zero");
+```
+
+### 在静态方法中使用泛型
+
+上述例子中我们创建了一个实例 `p1`, 在创建该对象时便已经声明了其泛型类型,便已经知道了由 `<K, V>` 参数确定的 `key` `value` 字段的类型. 而对于静态方法而言, 它是不需要依附对象实例存在的方法, 因此在调用该方法的时候无法获取到在构造方法里面确定的泛型类型, 需要我们手动重新指明泛型类型参数. 即在 `static` 关键字后, 在**返回值类型**之前需要额外声明一个泛型类型参数 `<K, V>`. 实际上这里声明的 `<K, V>` 已经和构造方法里面的 `<K, V>` 并不是同一类型了, 因此我们还可以把它改成其它任何名字, 例如 `<A, B>`.
+
+```java
+public class Pair<K, V> {
+    // ...
+    public static <K, V> Pair<K, V> createNewPair(K key, V value) {
+        return new Pair<K, V>(key, value);
+    }
+}
+```
+
+在上述例子中我们返回新创建的对象时, 用了 `new` 操作符而没有直接使用 `this`, 即 `return this(K, V);` 这样的语句是不合法的. 原因有两个, 其一是因为上文提到过的静态方法中定义的 `<K, V>` 和 构造方法中的 `<K, V>` 并不是同一类型, 其二是 `this` 指向的是一个对象实例, 而静态方法是不依附于任何实例的, 不能在静态方法中使用 `this`.
+
+此外, 并不是在泛型类中才能编写泛型方法, 在任何类的方法中都可以使用泛型, 例如下面是一个用于比较两个 `Pair` 对象是否相等的例子, 同样在 `static` 关键字之后, **返回值类型**之前指定了泛型参数.
+
+```java
+class Utils {
+    public static <K, V> boolean comparePairs(Pair<K, V> p1, Pair<K, V> p2) {
+        return p1.getKey().equals(p2.getKey()) && p1.getValue().equals(p2.getValue());
+    }
+}
+```
+
+在实际调用静态泛型方法的时候, 需要指明所接收的参数的泛型类型. 但实际上一般情况下泛型类型都可以根据传入的参数推导出来, 所以一般情况下可以省略
+
+```java
+Pair<Integer, String> p1 = new Pair<>(0, "zero");
+Pair<Integer, String> p2 = new Pair<>(1, "one");
+boolean isEqual = Utils.<Integer, String>comparePairs(p1, p2);
+
+boolean isEqual = Utils.comparePairs(p1, p2); // generic parameters can be omitted
+```
+
+## 类型边界 _Bounds for Type_
+
+如果我们想要对传入的泛型类型作一定限制, 我们可以使用 `extends` 关键字来进行限定.
+
+```java
+public class Pair<T extends Number> {
+    private T first;
+    private T last;
+
+    public Pair(T first, T last) {
+        this.first = first;
+        this.last = last;
+    }
+}
+```
+
+这样类型 `T` 就只能是 `Number` 的子类. `extends` 后面也可以是接口类型, 多个类或接口需要使用 `&` 连接.
+
+## 类型擦拭 _Type Erase_
+
+### 类型擦拭的概念
+
+首先观察下面一个例子, 我们可以发现 `p1` 和 `p2` 的第一个泛型类型分别是 `Integer` 和 `Float`, 按照直觉 `Pair<Integer, String>` 和 `Pair<Float, String>` 应属于不同的类, 但事实上这两个类是完全相同的, 这是因为 Java 泛型的类型擦拭 (_Type Erase_) 机制造成的.
+
+```java
+Pair<Integer, String> p1 = new Pair<>(1, "one");
+Pair<Float, String> p2 = new Pair<>(0.9f, "two");
+boolean isEqual = p1.getClass() == p2.getClass(); // always true
+```
+
+其实 Java 的泛型实现也可以称作是实现了参数化类型, 即将类型也作为了一个参数传递给方法, 在我们定义泛型类的时候, 便指明了泛型参数, 例如 `class Pair<K, V> { ... }` 中我们指明了泛型参数 `K` 和 `V`, 这样在该类的构造方法和实例方法中我们都可以引用该类型参数. 但在定义静态方法时, 由于静态方法是不依赖于类的示例而存在的, 也就获取不到在定义类时指明的泛型参数, 因此需要我们在返回值前面单独声明泛型参数.
+
+而实际上的泛型类中, 所有定义为泛型类型的地方都被擦拭替换成了在定义时指明的边界类型. 例如我们之前定义的 `Pair<K extends Number, V>` 类在经过类型擦拭后实际上应该是这样的
+
+```java
+public class Pair {
+    private Number first;
+    private Object last;
+
+    // ...
+
+    public Number getFirst() {
+        return this.first;
+    }
+}
+```
+
+即对于编译器来说, 不管是 `Pair<Integer, String>` 和 `Pair<Float, String>`, 其实本质上都是和不提供泛型参数的 `Pair` 类型是一样的, 在用到泛型方法的时候, 编译器会自动根据所提供的泛型类型插入一个强制转型语句, JVM 实际在执行代码的时候是不存在泛型的.
+
+```java
+Pair<Integer, String> p1 = new Pair<>(3, "three");
+Integer num = p1.getFirst();
+// 编译后的实际情况
+Pair p1 = new Pair(3, "three");
+Integer num = (Integer) p1.getFirst();
+```
+
+### 类型擦拭带来的局限
+
+#### 类型参数不能是原生类型
+
+在之前使用 `ArrayList` 的时候我们便注意到其泛型参数不能是原生的数据类型例如 `int float` 等, 因为经过泛型擦拭后的 `Object` 类不能容纳这些原生类型, 必须使用封装后的类 `Integer Float`等.
+
+#### 无法获取带泛型类的 `Class`
+
+正如上面已经提到过的例子
+
+```java
+p1.getClass() == Pair.class // always true
+```
+
+#### 无法判断带泛型的类型
+
+因为不存在 `Pair<Integer, String>.class`, 只存在 `Pair.class` 所以下面的写法会报错
+
+```java
+p1 instanceof Pair<Integer, String> // error
+```
+
+#### 无法直接实例化泛型参数
+
+不能直接将泛型参数视作类名直接用 `new` 关键字来创建实例对象. 在类型擦拭之后 `new T()` 语句直接变成了 `new Object()`, 这样我们不管提供的泛型参数是什么类型, 最后都变成了 `Object` 类型. 编译器会阻止这种错误. 对于类似的需求, 需要使用反射来实现.
+
+> TODO
+
+```java
+public class Pair<T extends Number> {
+    private T first;
+    private T last;
+
+    public Pair(T first, T last) {
+        this.first = new T(); // error
+        this.last = new T(); // error
+    }
+}
+```
+
+#### 无意间地覆写方法
+
+下面这个例子在经过泛型擦拭后, `equals(T t)` 方法的参数变成了 `Object t`, 覆写了继承自 `Object` 类的同名的方法.
+
+```java
+public class Pair<T extends Number> {
+    // ...
+    public boolean equals(T t) {
+        return this == t;
+    }
+}
+```
+
+## 泛型的继承关系
+
+封装类中 `Integer` 和 `Float` 等类型都继承自 `Number` 类型, 但对于泛型类 `Pair<Integer>` 和 `Pair<Number>` 之间没有任何继承关系. 这样的设计是为了保证类型安全，假设以下代码成立, 这样就破坏了声明 `p1` 时对类型的限制.
+
+```java
+Pair<Integer> p1 = new Pair<>(9, 6);
+Pair<Number> p2 = p1; // actually illegal in Java
+p2.setFirst(3.14f); // p1 and p2 refer to the same object
+```
+
+但带泛型参数的类型可以转为不带泛型参数的类型, 这样可以实现绕过类型参数的限制, 使用 `setter` 传入其它类型的对象, 但在之后再次使用 `getter` 获取该对象时会发生强制转型异常.
+
+```java
+Pair<Integer> p1 = new Pair<>(9, 6);
+Pair p2 = p1;
+p2.setFirst(3.14f);
+int i = p1.getFirst(); // ClassCastException
+```

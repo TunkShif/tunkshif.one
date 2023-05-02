@@ -1,0 +1,641 @@
+---
+type: Article
+title: Java 基础语法与数据类型学习记录
+created: 2020-08-12
+updated: 2020-08-12
+tags: ["java"]
+language: zh
+---
+
+> _黑历史文章系列_
+
+# Java 程序的基本结构
+
+## 简易示例
+
+```java
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello World!");
+    }
+}
+```
+
+类名的所有单词首字母大写，函数采用驼峰命名法，类名必须和源码文件名保持一致。
+
+`main` 方法是所有 Java 程序执行的入口，且必须修饰为 `public`，方法内部的语句必须以分号结尾。
+
+## 注释
+
+```java
+// 单行注释
+
+/*
+跨行注释
+*/
+
+/**
+ * 注释文档
+ * @version beta0.1
+ * @author TunkShif
+**/
+```
+
+# 数据类型和变量
+
+## 数据类型
+
+Java 中一共有 **8** 种基本数据类型，其中 **4** 种整数类型，**2** 种浮点类型，**1** 种字符类型和布尔类型。
+
+### 整数类型
+
+#### byte
+
+8bit $[-2^7,2^7-1]$
+
+用在大型数组中节约空间，主要代替整数。
+
+#### short
+
+16bit $[-2^{15},2^{15}-1]$
+
+#### int
+
+32bit $[-2^{31},2^{31}-1]$
+
+一般地整型变量默认为 `int` 类型。
+
+```java
+int i0 = 100; // 定义整型变量
+int i1 = 1_000_000; // 可用下划线分割
+int i2 = 0xff0000; // 加上'0x'前缀表示十六进制数
+int i3 = 0b100000; // 加上'0b'前缀表示二进制数
+```
+
+#### long
+
+64bit $[-2^{63},2^{63}-1]$
+
+表示方法为 `1000000L` 或 `1000000l`。
+
+### 浮点类型
+
+#### float
+
+32bit，单精度
+
+表示方法为 `0.1f` `3.14e10f`。
+
+#### double
+
+64bit, 双精度
+
+默认的浮点数类型，表示方法为 `0.1d` 或 `0.1`。
+
+### 布尔类型
+
+```java
+boolean b0 = true;
+boolean b1 = false;
+boolean isGreater = 5 > 3;
+```
+
+通常 JVM 内部会把 `boolean` 表示为 4 字节整数。
+
+### 字符类型
+
+```java
+char ch0 = 'A';
+char ch1 = '汉';
+```
+
+用来表示一个字符，用**单引号**包围，可以是标准 ASCII 或 Unicode 字符。
+
+## 数组
+
+### 创建数组
+
+数组用来容纳一组**相同类型**的数据，声明数组时采用数组中的类型名称加上方括号的形式，声明一个整型数组如下
+
+```java
+int[] a; // recommended
+int a[]; // also acceptable
+int[] a = new int[100];
+```
+
+初始化数组要用到 `new` 关键字，如上声明了一个含有 100 个整数的数组。数组一旦创建，其长度不可改变，但数组中的元素可以改变。
+
+可以用字面量的形式初始化数组，如下所示
+
+```java
+int[] a = { 1, 2, 3, 4, 5 };
+String[] b = { "Tom", "Jack", "Bob" };
+```
+
+使用匿名数组来更改一个数组变量的值
+
+```java
+new int[] { 0, 1, 2, 3};
+a = new int[] { 0, 1, 2, 3}
+```
+
+创建一个空数组或者长度为 0 的数组同样是可行的
+
+```java
+new int[0];
+new int[] {};
+```
+
+### 访问数组
+
+使用索引来访问数组的元素，所有整型数组在初始化时的值默认都为 0，而布尔类型的数组的默认值都为 `false`, 字符串数组的默认值都为 `null`。
+
+```java
+int[] a = new int[10];
+for (int i = 0; i < a.length; i++)
+```
+
+### 遍历数组
+
+用 `for (variable: collection) statement` 语句可以遍历数组中的每一个元素，其中的 `variable` 为代表元素的变量，`collection` 必须是可迭代对象。
+
+```java
+int[] a = new int[10];
+for (int i: a) {
+    System.out.println(i);
+}
+```
+
+传统的遍历数组的方法如下
+
+```java
+int[] a = new int[10];
+for (int i = 0; i < a.length; i++) {
+    System.out.println(i);
+}
+```
+
+如果想要像 Python 那样直接打印字面形式的数组，可以使用数组对象的 `toString` 方法。
+
+```java
+int[] a = new int[5];
+System.out.println(Arrays.toString(a)); // [0, 0, 0, 0, 0]
+```
+
+### 数组拷贝
+
+```java
+int[] a = new int[3];
+int[] b = a;
+b[0] = 10; // a[0] = b[0] = 10
+```
+
+上述例子中 a 和 b 指向的是同一个数组，如果想将已有数组拷贝到一个新的数组，使用数组对象的 `copyOf` 方法。
+
+```java
+int[] a = new int[3];
+int[] b = Arrays.copyOf(a, a.length);
+```
+
+该方法的第二个参数指明了新的数组的长度，因此这个方法常用来进行数组扩容。
+
+### 多维数组
+
+```java
+int[][] a = new int[2][2];
+int[][] a = {
+    {0, 0, 0},
+    {0, 0, 0}
+};
+```
+
+以上两种方式都可以声明二维数组，在访问时需要提供两个索引值，常规遍历方法如下
+
+```java
+int[][] a = {
+    {0, 0, 0},
+    {0, 0, 0}
+};
+for (int i = 0; i < a.length; i++) {
+    for (int j = 0; j < a[i].length; j++) {
+        System.out.println(a[i][j]);
+    }
+}
+```
+
+用 `foreach` 方式遍历二维数组
+
+```java
+int[][] a = {
+    {0, 0, 0},
+    {0, 0, 0}
+};
+for (int[] row: a) {
+    for (int value: a[row]) {
+        System.out.println(value)
+    }
+}
+```
+
+同样如果想直接打印输出二维数组的字面形式，可以使用数组的 `deepToString` 方法。
+
+对于一个二维数组，`array[i]` 其实本身也是一个数组，而 `array[i][j]` 则是数组中的一个元素，因此数组中的数组的长度可以不一样
+
+```java
+int[][] a = {
+    {0},
+    {1, 2},
+    {3, 4, 5}
+}
+```
+
+## 变量和常量
+
+### 声明变量
+
+每个变量在声明时必须指定类型，写在变量名之前。
+
+```java
+int age;
+double num;
+int i, j; // 同时声明两个变量
+int k = 10; // 声明变量时同时初始化值
+Box box; // 声明一个变量名为'box'类型为'Box'的变量
+```
+
+从 **Java 10** 开始，可以使用 `var` 关键字声明变量，可以自动推断变量类型。
+
+```java
+var i = 10; // int
+var s = "Hello World!"; // String
+```
+
+### 声明常量
+
+用 `final` 关键字修饰的变量为常量，通常全部使用大写字母，用下划线分割。
+
+```java
+final double PI = 3.14;
+final double SALARY_PER_HOUR = 20.0;
+```
+
+通常为了保证常量能在不同方法中多次复用，一般会在类当中声明常量。
+
+```java
+public class Test {
+    public static final int DAYS_PER_WEEK = 7;
+    public static void main(String[] args) {
+        System.out.println("There's " + DAYS_PER_WEEK + " days in a week.");
+    }
+}
+```
+
+如果常量声明时有 `public` 修饰，可以在其它类中使用，上图的例子只需调用 `Test.DAYS_PER_WEEK`。
+
+# 运算操作符
+
+## 算术运算符
+
+| 运算符 | 说明 |
+| ------ | ---- |
+| `+`    | 加法 |
+| `-`    | 减法 |
+| `*`    | 乘法 |
+| `/`    | 除法 |
+| `%`    | 取余 |
+
+整数与整数作运算得到的结果仍然是整数，如 `15 / 2` 的结果是 `7`，而 `15.0 / 2` 的结果是 `7.5`。
+
+整数运算时，零作除数在编译运行时会抛出异常，而浮点数除以零会得到 `Infinity` 或 `NaN` 的结果。
+
+#### 强制转型(Casts)
+
+```java
+double a = 9.99;
+int b = (int) a; // b = 9
+```
+
+### 运算赋值
+
+对于 `x = x + 1` 这可以简写成 `x += 1`，其余运算同理。
+
+### 自增自减
+
+使用 `a++` 或 `a--` 可以在原来的值的基础上递增或递减 1，另外还有 `++a`，区别示例如下：
+
+```java
+int a = 1;
+int b = 10 * a++; // a = 2, b = 10
+```
+
+```java
+int a = 1;
+int b = 10* ++a; // a = 2, b = 20
+```
+
+对于 `a++`，首先引用变量 `a` 的原始值后再递增，而 `++a` 是先递增后在引用递增之后的值。
+
+## 关系运算符
+
+关系运算符得到的结果为布尔型的变量，包括比较运算符 `> >= < <= == !=`，与运算 `&&`，或运算 `||`，非运算 `!`。
+
+#### 短路运算
+
+布尔运算的特点为短路运算，即若进行运算的第一个值已经决定了结果，那么就不会再对第二个比较的量进行求值，具体示例如下：
+
+```java
+boolean a = false;
+boolean b = a && (5 / 0 > 0); // b is  false
+```
+
+上述例子中 `b` 的值已经由 `a` 可推定是 `false`，所以不会再进行 `5 / 0 > 0` 的运算，运行不会因零不能作除数报错。
+
+#### 三元运算符
+
+`condition ? expression1 : expression2`，当条件为 `true` 时返回第一个表达式的结果，反之返回第二个表达式的结果。
+
+```java
+x > y ? x : y // return the greater one
+```
+
+## 位运算
+
+位运算即将两个整数转换为二进制后按位对齐，分别对各位进行运算，位运算包括与、或、非和异或，符合分别为 `& | ~ ^`。
+
+- 与运算：两者同时为 1 则返回 1，否则返回 0
+- 或运算：二者中任意一个为 1 即返回 1
+- 非运算：将 0 或 1 互换
+- 异或运算：若两数不同则返回 1，否则返回 0
+
+```java
+int a = 0b100;
+int b = 0b110;
+int c = a & b; // c = 0b100 = 4
+```
+
+位运算符同样也可以用于布尔变量的运算，但和关系运算符的区别在于位运算符没有短路运算的特性。
+
+## 移位运算
+
+`<< >>` 两个操作符可以对整数进行移位运算，即将整数在计算机内部的二进制形式后进行左右移位
+
+```java
+int a = 1;
+int b = 1 << 3; // b = 8 = 1 * 2^3
+```
+
+由于 Java 内部的整数二进制形式的最高位用来表示正负，在向右移位的运算时，最高位用来控制正负的数位不会移动，但向左移位时最高位可能会发生改变而导致结果的正负发生改变。
+
+还有一个特殊的 `>>>` 移位运算符，在向右移动时不管符号位最高位总是用 `0` 来补充。
+
+对 `byte` 和 `short` 类型移位时总是先转换位 `int` 类型再进行运算
+
+## 运算优先级
+
+- `()`
+- `! ~ ++ --`
+- `* / %`
+- `+ -`
+- `<< >> >>>`
+- `== !=`
+- `&`
+- `^`
+- `|`
+- `&&`
+- `||`
+- `?:`
+- `= += -= /= %= <<= >>=`
+
+# 字符串与输入输出
+
+## 字符串
+
+字符串是单个字符的序列，属于引用类型，所有用双引号包围的字符串都是 Java 内预先定义的 `String` 类的实例。
+
+```java
+String s0 = ""; // empty string
+String s1 = "Hello World!";
+```
+
+### 字符串截取
+
+类似 Python 中的字符串切片操作，可以对调用字符串实例的 `substring` 方法来截取字符串。
+
+```java
+String s0 = "Hello World!";
+String s1 = s0.substring(0, 3); // s1 = "Hel"
+```
+
+### 字符串拼接
+
+同样类似地可以用 `+` 来拼接字符串，对于非字符串类型的变量会自动转换成字符串类型，Java 中的所有对象都可以转换成字符串。
+
+```java
+int age = 17;
+String msg = "Age: " + age;
+```
+
+### 不可变性
+
+字符串变量是不可变的变量，创建字符串变量时，首先在内存中建立该字符串内容，再将变量指向该字符串，变更字符串变量的值的时候，只是改变了变量的指向。
+
+```java
+String s = "hello";
+String t = s;
+s = "world" // s is "world", t is "hello"
+```
+
+### 比较字符串
+
+用字符串对象的 `equals` 方法来比较两个字符串是否相等。
+
+```java
+String s = "hello";
+String t = "test";
+boolean isEqual = s.equals(t); // false
+```
+
+如果用 `==` 运算符来比较两个字符串，实际上比较的是两个变量的引用地址是否相同，但相同内容的字符串可能存在于不同的地址，因此应避免直接使用 `==` 来比较字符串是否相等。在 JVM 中只有字符串字面量是共享的，但通过字符串截取或拼接后得到的新的字符串可能存储在与字符串字面量不同的位置。
+
+### 空字符串
+
+空字符串 `""` 的长度为 0，因此可以通过以下方法比较字符串是否为空
+
+```java
+String s = "";
+boolean isEmpty0 = s.length() == 0;
+boolean isEmpty1 = s.equals("");
+```
+
+若一个字符串变量为初始化值则其值为 `null`，可以通过以下方法比较
+
+```java
+boolean isNull = str == null;
+```
+
+### 截取字符
+
+使用字符串的 `charAt` 方法可以获取某一位置的字符
+
+```java
+String s = 'Hello World!';
+char ch = s.charAt(0); // ch is 'H'
+```
+
+## 输入与输出
+
+### 从控制台输入
+
+```java
+import java.util.Scanner;
+
+public class HelloWorld {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in); // Build a Scanner
+        System.out.print("Input something:");
+        String s = in.nextLine();
+        System.out.println("You just typed " + s);
+        System.out.println("Input your age:");
+        int age = in.nextInt();
+        System.out.println(age);
+    }
+}
+```
+
+从控制台获取输入，首先需要构造一个 `Scanner` 的实例，然后调用其 `next`，`nextLine`，`nextInt` 等方法来读取输入。
+
+### 格式化输出
+
+```java
+double x = 1000.0 / 3.0;
+System.out.printf("%7.2f", x); // output is " 333.33"
+```
+
+用 `%` 加上相应占位符可以实现相应变量类型的格式化输出，具体如下表
+
+| 占位符 | 数据类型               |
+| ------ | ---------------------- |
+| `%d`   | 十进制整数             |
+| `%x`   | 十六进制整数           |
+| `%o`   | 八进制整数             |
+| `%f`   | 浮点数                 |
+| `%e`   | 科学计数法形式的浮点数 |
+| `%s`   | 字符串                 |
+| `%%`   | 百分号                 |
+
+每一个占位符必须提供一个相应的参数，同样还可以使用 `String` 类的 `format` 方法创建格式化字符串而不打印输出
+
+```java
+String name = "Tom";
+String s = String.format("Hello, %s", name);
+```
+
+# 控制流程
+
+## 代码块
+
+```java
+public static void main(String[] args) {
+    int i;
+    int j;
+    {
+        int k; // k is only defined in this block
+        int i; // ERROR: can't redefine a variable in nested block
+    }
+}
+```
+
+定义在代码块内的变量作用域也在该代码块，嵌套的代码块内不能重新定义已存在的变量。
+
+## 条件语句
+
+条件语句遵从 `if (condition) statement` 的格式，但一般条件后的语句不止一句，常用花括号包围。
+
+```java
+if (i >= 1) {
+    System.out.println("i is greater than 1.");
+} else {
+    System.out.println("sssssss");
+}
+```
+
+多条语句在一行内时为便于阅读建议加上括号
+
+```java
+if (i <= 0) if (i == 0) i = 1; else i = -1; // acceptable
+if (i <= 0) { if (i == 0) i = 1; else i = -1} // recommended
+```
+
+多重条件选择使用 `else if`
+
+```java
+if (i > 0) {
+    System.out.println("i is positive.");
+} else if (i < 0) {
+    System.out.println("i is negative.");
+} else {
+    System.out.println("i is zero.");
+}
+```
+
+## 循环语句
+
+第一种循环的基本结构为 `while (condition) statement`, 当条件为 `true` 时重复执行其后的语句，先判定条件再执行语句。
+
+第二种循环的基本结构为 `do statement while (condition)`, 先执行语句再判定条件。
+
+```java
+while (i <= 10) {
+    System.out.println(i);
+    i++;
+}
+```
+
+```java
+Scanner in = new Scanner(System.in);
+String input;
+do {
+    int i = in.nextInt();
+    System.out.println(i);
+    System.out.println("Quit now? (Y/N)");
+    input = in.next();
+} while (input.equals("N"));
+```
+
+第三种循环为常见的 `for` 循环，基本结构如下
+
+```java
+for (int i = 1; i <= 10; i++) {
+    System.out.println(i);
+}
+```
+
+括号里面的三部分分别为初始化计数变量的值，判定计数变量的条件，以及更新计数变量的语句。
+
+同样计数变量只作用于该循环语句所在的代码块内，因此可以在多个 `for` 循环中使用相同的计数变量。
+
+## 选择语句
+
+类似于 `if-else if` 的结构，从多种条件种选择
+
+```java
+switch (i) {
+    case 1:
+        doSomething();
+        break;
+    case 2:
+        doSomethingElse();
+        break;
+    default:
+        doNothing();
+        break;
+}
+```
+
+执行时从上往下依次对 `i` 的值进行检验，若有匹配的选项则执行相应语句并跳出，若没有对应的选项则执行 `default` 块内的语句。
+
+`case` 所匹配的 `label` 可以是 `char byte short int`，枚举常量，字符串字面量
+
+## 跳出循环
+
+使用 `break` 语句可以终止循环，类似地，使用 `continue` 语句可以从头开始循环。
