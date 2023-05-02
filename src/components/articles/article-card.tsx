@@ -2,7 +2,7 @@ import Card from "@/components/common/card"
 import Tags from "@/components/common/tags"
 import { estimatedReadingTime, formatDate } from "@/utils/formatter"
 import { CalendarDaysIcon, ClockIcon } from "@heroicons/react/24/outline"
-import type { Article } from "contentlayer/generated"
+import type { Article, Banner } from "contentlayer/generated"
 import Image from "next/image"
 import Link from "next/link"
 import { ReactNode } from "react"
@@ -17,9 +17,8 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
       <div className="flex h-full flex-col @md:min-h-[248px] @md:flex-row @md:group-even:flex-row-reverse">
         <Banner
           className="shrink-0 basis-40 @md:flex-[2] @md:basis-auto"
+          banner={article.banner}
           href={article.url}
-          src={article.banner?.url}
-          alt={article.banner?.description}
         />
 
         <Information
@@ -38,25 +37,29 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
 }
 
 const Banner = ({
-  src,
   href,
-  alt,
+  banner,
   className
 }: {
-  src?: string
   href: string
-  alt?: string
+  banner?: Banner
   className?: string
 }) => {
+  const img = banner
+    ? { ...banner.img, placeholder: "blur", blurDataURL: banner.blur }
+    : {
+      src: "/images/banner/wave.jpg",
+      fill: true,
+      sizes: "100vw"
+    }
+
   return (
     <div className={className}>
       <Link href={href} className="relative block h-full w-full">
         <Image
-          src={src || "/images/banner/wave.jpg"}
-          fill
-          quality="90"
-          sizes="100vw"
-          alt={alt || "banner image"}
+          {...img}
+          quality={90}
+          alt={banner?.description || "banner image"}
           className="rounded-t-md object-cover @md:rounded-none @md:group-odd:rounded-l-md @md:group-even:rounded-r-md"
         />
       </Link>

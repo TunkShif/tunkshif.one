@@ -20,7 +20,7 @@ export default function HomePage({ articles }: HomeProps) {
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const articles = Articles.recent()
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  const articles = await Articles.recent()
   return { props: { articles } }
 }

@@ -1,7 +1,7 @@
 import Tags from "@/components/common/tags"
 import { estimatedReadingTime, formatDate } from "@/utils/formatter"
 import { CameraIcon } from "@heroicons/react/20/solid"
-import type { Article } from "contentlayer/generated"
+import type { Article, Banner } from "contentlayer/generated"
 import { useMDXComponent } from "next-contentlayer/hooks"
 import Image from "next/image"
 import Link from "next/link"
@@ -31,12 +31,7 @@ const Article = ({ article }: ArticleProps) => {
             </div>
           </div>
 
-          <Banner
-            src={article.banner?.url}
-            alt={article.banner?.description}
-            source={article.banner?.source}
-            photographer={article.banner?.photographer}
-          />
+          <Banner banner={article.banner} />
         </div>
       </header>
 
@@ -49,42 +44,38 @@ const Article = ({ article }: ArticleProps) => {
 
 export default Article
 
-const Banner = ({
-  src,
-  alt,
-  source,
-  photographer
-}: {
-  src?: string
-  alt?: string
-  source?: string
-  photographer?: string
-}) => {
+const Banner = ({ banner }: { banner?: Banner }) => {
+  const img = banner
+    ? { ...banner.img, placeholder: "blur", blurDataURL: banner.blur }
+    : {
+      src: "/images/banner/wave.jpg",
+      fill: true,
+      sizes: "100vw"
+    }
+
   return (
     <figure>
       <div className="relative mb-2 aspect-[16/9] w-full">
         <Image
-          src={src || "/images/banner/wave.jpg"}
-          fill
-          quality="90"
-          sizes="100vw"
-          alt={alt || "banner image"}
-          className="rounded-md object-cover"
+          {...img}
+          quality={90}
+          alt={banner?.description || "banner image"}
+          className="h-full w-full rounded-md object-cover"
         />
       </div>
 
-      {source && (
+      {banner?.source && (
         <figcaption className="text-primary flex items-center justify-end gap-1 text-xs ">
           <span className="inline-block">
             <CameraIcon className="h-5 w-5" />
           </span>
           <Link
-            href={source}
+            href={banner.source}
             target="_blank"
             rel="noreferrer"
             className="inline-block font-medium hover:underline"
           >
-            {photographer}
+            {banner.photographer}
           </Link>{" "}
         </figcaption>
       )}

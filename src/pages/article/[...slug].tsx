@@ -19,16 +19,16 @@ export default function ArticlePage({ article }: ArticleProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = Articles.urls()
+  const paths = await Articles.urls()
   return {
     paths,
     fallback: false
   }
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps<ArticleProps> = async ({ params }) => {
   const slug = ((params?.slug as string[]) ?? []).join("/")
-  const article = Articles.find(slug)
+  const article = await Articles.find(slug)
 
   if (!article) return { notFound: true }
   return {

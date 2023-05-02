@@ -12,6 +12,16 @@ const Banner = defineNestedType(() => ({
       description: "The url to the banner image",
       required: true
     },
+    img: {
+      type: "json",
+      description: "The props for image component",
+      required: false
+    },
+    blur: {
+      type: "string",
+      description: "Base64 encoded blurred image",
+      required: false
+    },
     description: {
       type: "string",
       description: "The description for the image",

@@ -47,8 +47,8 @@ export default function ArticlesPage({ articles, page, total }: ArticlesProps) {
 }
 
 export const getStaticProps: GetStaticProps<ArticlesProps> = async () => {
-  const total = Articles.pages()
-  const articles = Articles.page(1)
+  const total = await Articles.pages()
+  const articles = await Articles.page(1)
   return {
     props: {
       articles,
