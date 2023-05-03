@@ -1,6 +1,7 @@
 import { default as ArticleContent } from "@/components/articles/article"
 import Comments from "@/components/articles/comments"
 import Layout from "@/components/layout"
+import SEO from "@/components/layout/seo"
 import { Articles } from "@/content"
 import type { Article } from "contentlayer/generated"
 import type { GetStaticPaths, GetStaticProps } from "next"
@@ -12,6 +13,12 @@ type ArticleProps = {
 export default function ArticlePage({ article }: ArticleProps) {
   return (
     <Layout title={article.title}>
+      <SEO
+        description={article.description?.raw}
+        keywords={article.tags}
+        image={"https://tunkshif.one" + article.banner?.url}
+        canonical={"https://tunkshif.one" + article.url}
+      />
       <ArticleContent article={article} />
       <Comments />
     </Layout>
@@ -19,7 +26,7 @@ export default function ArticlePage({ article }: ArticleProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const paths = await Articles.urls()
+  const paths = Articles.urls()
   return {
     paths,
     fallback: false

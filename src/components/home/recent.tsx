@@ -16,6 +16,7 @@ const Recent = ({ articles }: RecentProps) => {
           href="/articles"
           className="group inline-flex items-center transition duration-300 ease-in-out hover:text-slate-900 dark:hover:text-slate-200"
         >
+          <span className="sr-only">see more articles</span>
           <span className="mr-0.5">MORE</span>
           <span className="inline-block">
             <ChevronDoubleRightIcon className="h-4 w-4 translate-x-0 transform transition duration-300 ease-in-out group-hover:translate-x-0.5" />

@@ -28,6 +28,9 @@ dependencies:
   next-contentlayer:
     specifier: ^0.3.2
     version: 0.3.2(esbuild@0.17.18)(next@13.3.2)(react-dom@18.2.0)(react@18.2.0)
+  next-sitemap:
+    specifier: ^4.0.9
+    version: 4.0.9(@next/env@13.3.2)(next@13.3.2)
   next-themes:
     specifier: ^0.2.1
     version: 0.2.1(next@13.3.2)(react-dom@18.2.0)(react@18.2.0)
@@ -238,6 +241,10 @@ packages:
       oo-ascii-tree: 1.80.0
       ts-pattern: 4.2.2
       type-fest: 3.9.0
+    dev: false
+
+  /@corex/deepmerge@4.0.43:
+    resolution: {integrity: sha512-N8uEMrMPL0cu/bdboEWpQYb/0i2K5Qn8eCsxzOmxSggJbbQte7ljMRoXm917AbntqTGOzdTu+vP3KOOzoC70HQ==}
     dev: false
 
   /@effect-ts/core@0.60.5:
@@ -4336,6 +4343,20 @@ packages:
       - esbuild
       - markdown-wasm
       - supports-color
+    dev: false
+
+  /next-sitemap@4.0.9(@next/env@13.3.2)(next@13.3.2):
+    resolution: {integrity: sha512-8pbcEe4vrmgGEc3beVbrSqd8mTQ9lCsGxP+AOlArrGmeLkKD4TbSR41R2unQHHSTkBG8cQ/7gjKkdLBlzwtu6g==}
+    engines: {node: '>=14.18'}
+    hasBin: true
+    peerDependencies:
+      '@next/env': '*'
+      next: '*'
+    dependencies:
+      '@corex/deepmerge': 4.0.43
+      '@next/env': 13.3.2
+      minimist: 1.2.8
+      next: 13.3.2(@opentelemetry/api@1.4.1)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /next-themes@0.2.1(next@13.3.2)(react-dom@18.2.0)(react@18.2.0):

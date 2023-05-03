@@ -34,3 +34,7 @@ next-env.d.ts
 
 # contentlayer
 .contentlayer
+
+# next-sitemap auto-generated
+/public/robots.txt
+/public/sitemap*

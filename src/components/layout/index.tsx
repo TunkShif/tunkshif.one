@@ -13,6 +13,7 @@ const Layout = ({ title, children }: LayoutProps) => {
     <>
       <Head>
         <title>{`${title || ""}${title ? " - " : ""}tunkshif.one`}</title>
+        <meta property="og:title" content={title} />
       </Head>
       <Header />
       <main className="mx-8 max-w-full lg:mx-auto lg:max-w-4xl">{children}</main>
