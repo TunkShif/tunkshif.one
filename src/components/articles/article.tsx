@@ -55,12 +55,12 @@ const Banner = ({ banner }: { banner?: Banner }) => {
 
   return (
     <figure>
-      <div className="relative mb-2 aspect-[16/9] w-full">
+      <div className="relative mb-2 aspect-[2/1] w-full">
         <Image
           {...img}
           quality={90}
           alt={banner?.description || "banner image"}
-          className="h-full w-full rounded-md object-cover"
+          className="h-full w-full rounded-lg object-cover"
         />
       </div>
 
