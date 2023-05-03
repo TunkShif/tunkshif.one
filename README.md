@@ -1,6 +1,7 @@
 ## TODO
 
 - Migrate to Next
+- kbd style
 - CLI
 - SEO
 - OG Graph
