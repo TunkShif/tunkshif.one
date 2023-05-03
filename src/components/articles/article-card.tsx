@@ -13,7 +13,7 @@ type ArticleCardProps = {
 
 const ArticleCard = ({ article }: ArticleCardProps) => {
   return (
-    <Card className="group h-full transform transition duration-300 hover:-translate-y-1 hover:scale-[1.01]">
+    <Card className="group h-full transform transition duration-300 hover:-translate-y-1 hover:scale-[1.01] origin-top-left">
       <div className="flex h-full flex-col @md:min-h-[248px] @md:flex-row @md:group-even:flex-row-reverse">
         <Banner
           className="shrink-0 basis-40 @md:flex-[2] @md:basis-4"

@@ -19,7 +19,7 @@ const paginated = articles.then((articles) => cluster(articles, 5))
 
 export const Articles = {
   urls: () => articles.then((articles) => articles.map((article) => article.url)),
-  recent: () => articles.then((articles) => articles.slice(0, 3)),
+  recent: () => articles.then((articles) => articles.slice(0, 6)),
   find: (slug: string) =>
     articles.then((articles) =>
       articles.find((article) => article._raw.flattenedPath === `article/${slug}`)

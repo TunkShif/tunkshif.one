@@ -23,10 +23,10 @@ const Recent = ({ articles }: RecentProps) => {
         </Link>
       </div>
 
-      <div className="mt-7 lg:-mx-8">
-        <div className="flex flex-col gap-2 md:flex-row md:justify-evenly">
+      <div className="-mx-4 mt-5 md:mx-auto">
+        <div className="flex w-full snap-x justify-start gap-4 overflow-x-auto py-2 lg:flex-wrap">
           {articles.map((article) => (
-            <div className="w-full @container md:w-72" key={article._id}>
+            <div className="w-72 flex-none shrink-0 snap-center @container" key={article._id}>
               <ArticleCard article={article} />
             </div>
           ))}
