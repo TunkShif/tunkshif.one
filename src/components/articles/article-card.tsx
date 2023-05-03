@@ -1,6 +1,6 @@
 import Card from "@/components/common/card"
 import Tags from "@/components/common/tags"
-import { estimatedReadingTime, formatDate } from "@/utils/formatter"
+import { formatDate } from "@/utils/formatter"
 import { CalendarDaysIcon, ClockIcon } from "@heroicons/react/24/outline"
 import type { Article, Banner } from "contentlayer/generated"
 import Image from "next/image"
@@ -13,7 +13,7 @@ type ArticleCardProps = {
 
 const ArticleCard = ({ article }: ArticleCardProps) => {
   return (
-    <Card className="group h-full transform transition duration-300 hover:-translate-y-1 hover:scale-[1.01] origin-top-left">
+    <Card className="group h-full origin-top-left transform transition duration-300 hover:-translate-y-1 hover:scale-[1.01]">
       <div className="flex h-full flex-col @md:min-h-[248px] @md:flex-row @md:group-even:flex-row-reverse">
         <Banner
           className="shrink-0 basis-40 @md:flex-[2] @md:basis-4"
@@ -26,7 +26,7 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
           title={article.title}
           href={article.url}
           tags={article.tags}
-          readingTime={article.body.raw}
+          readingTime={article.readingTime}
           createdAt={article.created}
           language={article.language}
           description={article.description?.html}
@@ -48,10 +48,10 @@ const Banner = ({
   const img = banner
     ? { ...banner.img, placeholder: "blur", blurDataURL: banner.blur }
     : {
-      src: "/images/banner/wave.jpg",
-      fill: true,
-      sizes: "100vw"
-    }
+        src: "/images/banner/wave.jpg",
+        fill: true,
+        sizes: "100vw"
+      }
 
   return (
     <div className={className}>
@@ -81,7 +81,7 @@ const Information = ({
   href: string
   tags: string[]
   description?: string
-  readingTime: string
+  readingTime?: string
   createdAt: string
   language: string
   className?: string
@@ -99,7 +99,7 @@ const Information = ({
           <LabeledText icon={CalendarDaysIcon}>
             <time dateTime={createdAt}> {formatDate(createdAt)}</time>
           </LabeledText>
-          <LabeledText icon={ClockIcon}>{estimatedReadingTime(readingTime)}</LabeledText>
+          <LabeledText icon={ClockIcon}>{readingTime}</LabeledText>
         </div>
       </div>
     </div>

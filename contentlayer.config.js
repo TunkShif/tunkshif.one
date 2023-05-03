@@ -81,6 +81,11 @@ export const Article = defineDocumentType(() => ({
       description: "The most recent updated date of the article",
       required: true
     },
+    readingTime: {
+      type: "string",
+      description: "The estimated readingTime",
+      required: false
+    },
     language: {
       type: "enum",
       description: "The language of the article",
