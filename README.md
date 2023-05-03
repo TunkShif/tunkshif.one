@@ -1,10 +1,11 @@
 ## TODO
 
 - Migrate to Next
-- pagination
+- CLI
 - SEO
 - OG Graph
 - tags
+- toc
 - search
 - zod
 - tooltip for long description text in article card

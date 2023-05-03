@@ -10,7 +10,7 @@ const Tags = ({ tags }: TagsProps) => {
   return (
     <ScrollArea.Root className="overflow-hidden">
       <ScrollArea.Viewport className="h-full w-full">
-        <div className="flex space-x-1.5">
+        <div className="flex gap-1.5">
           {tags.map((tag) => (
             <Tag key={tag} text={tag} />
           ))}

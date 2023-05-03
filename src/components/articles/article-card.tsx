@@ -48,10 +48,10 @@ const Banner = ({
   const img = banner
     ? { ...banner.img, placeholder: "blur", blurDataURL: banner.blur }
     : {
-        src: "/images/banner/wave.jpg",
-        fill: true,
-        sizes: "100vw"
-      }
+      src: "/images/banner/wave.jpg",
+      fill: true,
+      sizes: "100vw"
+    }
 
   return (
     <div className={className}>

@@ -30,5 +30,5 @@ export const Articles = {
       articles.find((article) => article._raw.flattenedPath === `article/${slug}`)
     ),
   page: (page: number = 1) => paginated.then((paginated) => paginated[page - 1]),
-  pages: () => omitted.then((paginated) => paginated.length)
+  pages: () => paginated.then((paginated) => paginated.length)
 }
