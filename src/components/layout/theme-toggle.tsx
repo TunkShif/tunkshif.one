@@ -15,7 +15,7 @@ const ThemeToggle = () => {
   return (
     <Switch.Root className={track} onClick={() => setTheme(isDark ? "light" : "dark")}>
       <span className="sr-only">theme toggle</span>
-      <Switch.Thumb className="pointer-events-none inline-flex h-[22px] w-[22px] transform items-center justify-center rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out dark:translate-x-5 dark:bg-slate-800">
+      <Switch.Thumb className="pointer-events-none inline-flex h-[22px] w-[22px] translate-x-px transform items-center justify-center rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out dark:translate-x-5 dark:bg-slate-800">
         {isDark ? (
           <MoonIcon className="h-3 w-3 text-gray-300" />
         ) : (
