@@ -1,1 +1,0 @@
-export const card = /* tw */ `rounded-md bg-white border border-slate-900/10 transition duration-300 ease-in-out hover:border-gray-300 dark:bg-slate-800 dark:border-white/10 dark:hover:border-white/20`
