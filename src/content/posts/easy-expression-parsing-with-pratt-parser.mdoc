@@ -1,0 +1,27 @@
+---
+title: Easy Expression Parsing with Pratt Parser
+created: '2023-10-12'
+tags:
+  - parser
+---
+Pratt Parsing 是一种便于解析表达式的 Parsing 算法，尤其擅长处理表达式中运算符优先级和结合性的问题。在 [Crafting Interpreters](https://craftinginterpreters.com/compiling-expressions.html#a-pratt-parser) 这本书中，作者详细介绍了如何用 C 语言实现能够解析 Lox 语言的 Pratt Parser。
+
+假如我们现在有以下语法描述的一门语言，能够产生诸如 `1 + 2 - 3 * 4 / 5` 或 `-f(a + b, a - b)` 的简单数学表达式。
+
+```
+expression = NUMBER | IDENTIFIER | unary | binary | grouping | call ;
+grouping   = "(" expression ")" ;
+unary      = "-" expression ;
+binary     = expression ( "+" | "-" | "*" | "/" ) expression ;
+call       = IDENT "(" arguments? ")" ;
+arguments  = expression ( "," expression )* ;
+```
+
+如果我们要手工实现 Parser 来解析上述表达式，其中运算符的优先级和结合性是需要我们解决的问题。
+
+- 优先级（Precedence）：例如 `*` 和 `/` 的优先级高于 `+` 和 `-`，即 `1+2*3` 应该被解析为`1 + (2 * 3)`。
+- 结合性（Associativity）：例如`/`是左结合的运算符，即`1/2/3`应该被解析为`((1 / 2) / 3)`而不是`(1 / (2 / 3))`。
+
+在 Pratt Parsing 算法中，token 被分为 prefix 和 infix 两类，其核心算法流程是：
+
+- 要解析一个表达式首先读取一个 token 作为 prefix，这个 prefix 是用来构建一个表达式的最起始的 token，例如 `1 + 2`当中的`1`， `-(a+b)` 中的 `-`
