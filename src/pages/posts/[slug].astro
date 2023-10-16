@@ -1,6 +1,6 @@
 ---
 import { getCollection, getEntry } from "astro:content"
-import Layout from "../../layouts/Layout.astro"
+import Layout from "@/layouts/Layout.astro"
 
 const { slug } = Astro.params
 if (!slug) throw new Error("Slug not found")
@@ -9,14 +9,15 @@ const post = await getEntry("posts", slug)
 if (!post) throw new Error("No post found for this slug")
 const { Content } = await post.render()
 
-// Generate static pages
 export async function getStaticPaths() {
   const posts = await getCollection("posts")
   return posts.map((post) => ({ params: { slug: post.slug } }))
 }
 ---
 
-<Layout title={post.data.title}>
-  <h1>{post.data.title}</h1>
-  <Content />
+<Layout title={`${post.data.title} | TunkShif`}>
+  <h1 class="text-2xl font-semibold text-slate-800">{post.data.title}</h1>
+  <div class="prose mx-auto max-w-3xl dark:prose-invert">
+    <Content />
+  </div>
 </Layout>

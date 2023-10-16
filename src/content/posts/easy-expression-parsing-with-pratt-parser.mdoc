@@ -15,7 +15,7 @@ Pratt Parsing 是一种便于解析表达式的 Parsing 算法，尤其擅长处
 
 假如我们现在有以下语法描述的一门语言，能够产生诸如 `1 + 2 - 3 * 4 / 5` 或 `-f(a + b, a - b)` 的简单数学表达式。
 
-```
+```bnf
 expression = NUMBER | IDENTIFIER | unary | binary | grouping | call ;
 grouping   = "(" expression ")" ;
 unary      = "-" expression ;
@@ -27,13 +27,13 @@ arguments  = expression ( "," expression )* ;
 如果我们要手工实现 Parser 来解析上述表达式，其中运算符的优先级和结合性是需要我们解决的问题。
 
 - 优先级（Precedence）：例如 `*` 和 `/` 的优先级高于 `+` 和 `-`，即 `1+2*3` 应该被解析为`1 + (2 * 3)`。
-- 结合性（Associativity）：例如`/`是左结合的运算符，即`1/2/3`应该被解析为`((1 / 2) / 3)`而不是`(1 / (2 / 3))`。
+- 结合性（Associativity）：例如 `/` 是左结合的运算符，即 `1/2/3` 应该被解析为 `((1 / 2) / 3)`而不是`(1 / (2 / 3))`。
 
 ## 算法流程
 
 在 Pratt Parsing 算法中，token 被分为 prefix 和 infix 两类，其核心算法流程是：
 
-- 要解析一个表达式首先读取一个 token 作为 prefix，这个 prefix 是用来构建一个表达式的最起始的 token，例如 `1 + 2`当中的`1`，`-(a+b)` 中的 `-` 和 `foo()` 当中的 `foo`。
+- 要解析一个表达式首先读取一个 token 作为 prefix，这个 prefix 是用来构建一个表达式的最起始的 token，例如 `1 + 2` 当中的 `1`，`-(a+b)` 中的 `-` 和 `foo()` 当中的 `foo`。
 - 而 infix 则是在构建表达式的过程中必须知道其左侧节点的 token，例如 `1 + 2` 中的 `+` 或者 `foo()` 中的 `(` 。要获取 infix 右侧的表达式，我们需要指定一个优先级递归的去解析右侧的子表达式。
 
 例如根据上述算法解析 `-1 + 2 * 3` 这个表达式：

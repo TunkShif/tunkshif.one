@@ -5,8 +5,30 @@ import Layout from "../layouts/Layout.astro"
 const posts = await getCollection("posts")
 ---
 
-<Layout title="Under Construction">
-  <div>
-    <h1></h1>
-  </div>
+<Layout title="Blog | TunkShif">
+  <main>
+    <h1 class="text-xl font-semibold mb-4 text-slate-800">All Posts</h1>
+    <section>
+      <ul>
+        {
+          posts.map((post) => (
+            <li>
+              <div class="flex flex-col gap-1">
+                <div>
+                  <a class="font-medium" href={`/posts/${post.slug}`} rel="prefetch-intent">
+                    {post.data.title}
+                  </a>
+                </div>
+                <div class="flex gap-2 text-sm">
+                  <time class="tabular-nums" datetime={post.data.created}>
+                    {post.data.created}
+                  </time>
+                </div>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </main>
 </Layout>
