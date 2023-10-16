@@ -6,6 +6,13 @@ tags:
 ---
 Pratt Parsing 是一种便于解析表达式的 Parsing 算法，尤其擅长处理表达式中运算符优先级和结合性的问题。在 [Crafting Interpreters](https://craftinginterpreters.com/compiling-expressions.html#a-pratt-parser) 这本书中，作者详细介绍了如何用 C 语言实现能够解析 Lox 语言的 Pratt Parser。
 
+在我写下这篇文章之前已经有很多写得很不错的文章介绍 Pratt Parsing 了，首先推荐阅读下列文章：
+
+- [Pratt Parsers: Expression Parsing Made Easy](https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/)
+- [On Recursive Descent and Pratt Parsing](https://chidiwilliams.com/post/on-recursive-descent-and-pratt-parsing/)
+- [Simple but Powerful Pratt Parsing](https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html)
+- [手写一个Parser - 代码简单而功能强大的Pratt Parsing](https://zhuanlan.zhihu.com/p/471075848)
+
 假如我们现在有以下语法描述的一门语言，能够产生诸如 `1 + 2 - 3 * 4 / 5` 或 `-f(a + b, a - b)` 的简单数学表达式。
 
 ```
@@ -22,6 +29,129 @@ arguments  = expression ( "," expression )* ;
 - 优先级（Precedence）：例如 `*` 和 `/` 的优先级高于 `+` 和 `-`，即 `1+2*3` 应该被解析为`1 + (2 * 3)`。
 - 结合性（Associativity）：例如`/`是左结合的运算符，即`1/2/3`应该被解析为`((1 / 2) / 3)`而不是`(1 / (2 / 3))`。
 
+## 算法流程
+
 在 Pratt Parsing 算法中，token 被分为 prefix 和 infix 两类，其核心算法流程是：
 
-- 要解析一个表达式首先读取一个 token 作为 prefix，这个 prefix 是用来构建一个表达式的最起始的 token，例如 `1 + 2`当中的`1`， `-(a+b)` 中的 `-`
+- 要解析一个表达式首先读取一个 token 作为 prefix，这个 prefix 是用来构建一个表达式的最起始的 token，例如 `1 + 2`当中的`1`，`-(a+b)` 中的 `-` 和 `foo()` 当中的 `foo`。
+- 而 infix 则是在构建表达式的过程中必须知道其左侧节点的 token，例如 `1 + 2` 中的 `+` 或者 `foo()` 中的 `(` 。要获取 infix 右侧的表达式，我们需要指定一个优先级递归的去解析右侧的子表达式。
+
+例如根据上述算法解析 `-1 + 2 * 3` 这个表达式：
+
+- 以最小的运算符优先级 `TERM` 开始解析
+- 读取 token `-` 作为 prefix，匹配到 unary 规则，要获取到操作数，则需要以 `UNARY` 优先级递归解析子表达式
+  - 读取 token `1` 作为 prefix，下一个 token `+` 对应的优先级 `TERM` 小于当前优先级 `UNARY`，则递归终止
+  - 返回 `(- 1)` 作为表达式左侧节点
+- 读取 token `+` 作为 infix，匹配到 binary 规则，要获取到右侧节点，则继续以 `TERM` 优先级递归解析子表达式
+  - 读取 token `2` 作为 prefix，下一个 token `*` 对应的优先级 `FACTOR` 大于当前优先级 `TERM`，则将 `2` 作为表达式左侧节点
+  - 读取 token `*` 作为 infix，匹配到 binary 规则，要获取右侧节点，则继续以 `FACTOR` 优先级递归解析子表达式
+    - 读取 token `3` 作为 prefix，后续再无更多 token，则返回 `3` 作为右侧节点
+  - 返回 `(2 * 3)` 作为表达式右侧节点
+- 获得完整表达式 `(-1) + (2 * 3)`
+
+## 代码实现
+
+根据表达式求值的运算先后顺序，运算顺序越靠前的优先级数值越大，我们定义下列的优先级：
+
+```typescript
+enum Precedence {
+  NONE,
+  TERM, // + -
+  FACTOR, // * /
+  UNARY, // -
+  CALL, // ()
+  PRIMARY
+}
+```
+
+同时我们定义一个解析规则对象，里面存储 token 作为 prefix 和 infix 时的解析函数以及优先级：
+
+```typescript
+type ParseRule = {
+  precedence: Precedence
+  prefixFn: ((parser: Parser, token: Token) => Expr) | null
+  infixFn: ((parser: Parser, token: Token, left: Expr) => Expr) | null
+}
+
+class Parser {
+  static rules: Record<TokenType, ParseRule> = {
+    IDENT: { precedence: Precedence.NONE, prefixFn: Parser.identifier, infixFn: null },
+    NUMBER: { precedence: Precedence.NONE, prefixFn: Parser.number, infixFn: null },
+    PLUS: { precedence: Precedence.TERM, prefixFn: null, infixFn: Parser.binary },
+    MINUS: { precedence: Precedence.TERM, prefixFn: Parser.unary, infixFn: Parser.binary },
+    STAR: { precedence: Precedence.FACTOR, prefixFn: null, infixFn: Parser.binary },
+    SLASH: { precedence: Precedence.FACTOR, prefixFn: null, infixFn: Parser.binary },
+    COMMA: { precedence: Precedence.NONE, prefixFn: null, infixFn: null },
+    LPAREN: { precedence: Precedence.CALL, prefixFn: Parser.grouping, infixFn: Parser.call },
+    RPAREN: { precedence: Precedence.NONE, prefixFn: null, infixFn: null },
+    EOF: { precedence: Precedence.NONE, prefixFn: null, infixFn: null }
+  }
+}
+```
+
+而上述演示的核心算法流程即为下面这个函数的内容：
+
+```typescript
+private parsePrecedence(precedence: Precedence) {
+  const token = this.advance()
+  const prefixFn = Parser.rules[token.type].prefixFn
+
+  if (!prefixFn) {
+    throw new Error("Expect expression.")
+  }
+
+  let left = prefixFn(this, token)
+  while (Parser.rules[this.peek().type].precedence >= precedence) {
+    const nextToken = this.advance()
+    const infixFn = Parser.rules[nextToken.type].infixFn!
+    left = infixFn(this, nextToken, left)
+  }
+
+  return left
+}
+```
+
+需要注意的是 Pratt Parsing 是一种同时采用了递归和循环的算法，为了保证能够正常终止，这里专门设置了一个 `EOF` 的 token，并将其规则的优先级设为最低。
+
+要解析产生一个表达式则只需要以最低的运算符优先级调用 `parsePrecedence` 方法：
+
+```typescript
+private expression() {
+  return this.parsePrecedence(Precedence.TERM)
+}
+```
+
+`number` 和 `identifier` 方法分别解析产生数字和标识符类型的表达式节点：
+
+```typescript
+private static number(_parser: Parser, token: Token): Expr {
+  return { type: "NUMBER", value: token.lexeme }
+}
+
+private static identifier(_parser: Parser, token: Token): Expr {
+  return { type: "IDENT", name: token.lexeme }
+}
+```
+
+`unary` 方法解析产生一个一元运算符表达式：
+
+```typescript
+private static unary(parser: Parser, token: Token): Expr {
+  const body = parser.parsePrecedence(Precedence.UNARY)
+  return { type: "UNARY", operator: token, body }
+}
+```
+
+而对于二元运算符还存在结合性的问题，解决方案是在递归解析右侧节点子表达式的时候传入一个更高一级的优先级。文章最开头提到的 [Simple but Powerful Pratt Parsing](https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html) 一文中，作者用 binding power 的理论更加形象化的解释了这一点。
+
+`binary` 方法解析产生一个二元运算符表达式：
+
+```typescript
+private static binary(parser: Parser, token: Token, left: Expr): Expr {
+  const precedence = Parser.rules[token.type].precedence
+  const right = parser.parsePrecedence(precedence + 1)
+  return { type: "BINARY", operator: token, left, right }
+}
+```
+
+包含完整的 Lexer 和 Parser 的 TypeScript 代码实现可以在该 [GitHub Repo](https://github.com/TunkShif/pratt-parser-demo-ts) 找到。另外还有一个使用 Zig 语言实现的 Lox Parser 也可以在该 [GitHub Repo ](https://github.com/TunkShif/lox-project/blob/main/lox-zg/src/compiler.zig)查看。唯一的区别在于前者解析输出的是 AST，而后者则是直接解析产生的 Bytecode。
