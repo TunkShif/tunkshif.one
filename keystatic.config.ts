@@ -32,7 +32,7 @@ export default config({
           links: true,
           images: {
             directory: "src/assets/images/posts",
-            publicPath: "/src/assets/images/posts/"
+            publicPath: "../../src/assets/images/posts/"
           },
           tables: true
         })
