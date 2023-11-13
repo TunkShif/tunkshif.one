@@ -11,7 +11,7 @@ tags:
 
 而目前已经存在的解决方案主要包括：
 
-- 使用 `opacity: 0` 或 `visibility: hidden` 等比较 tricky 的手段来实现隐藏元素，但这种方法存在影响文档布局以及无障碍相关的问题，因此并**不推荐**该方法。这类方法常见于 StackOverflow 中“*为什么我的动画效果对*\**`display: none`\***不起作用的相关问题*“回答下。
+- 使用 `opacity: 0` 或 `visibility: hidden` 等比较 tricky 的手段来实现隐藏元素，但这种方法存在影响文档布局以及无障碍相关的问题，因此并**不推荐**该方法。这类方法常见于 StackOverflow 中“*为什么我的动画效果对*`display: none`*不起作用的相关问题*“回答下。
 - 监听 [`transitionend`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionend_event) 或 [`animationend`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationend_event) 相关的事件，在确保过渡动画结束后再将元素隐藏或移除。当然有些地方也会获取到动画时间，然后使用 `setTimeout` 的回调去实现。这是比较常见的解决方案，例如下面这些库：
   - [Bootstrap](https://github.com/twbs/bootstrap/blob/f7426c08e7818ff3eb77f7c7cde54ca6d28009b2/js/src/util/index.js#L229)：监听 `transitionend` 事件
   - [Headless UI](https://github.com/tailwindlabs/headlessui/blob/76dd10ea554fa1d05576be2090612a3c3b04f9cb/packages/%40headlessui-react/src/components/transitions/utils/transition.ts#L13) 的 [Transition](https://headlessui.com/react/transition) 组件：监听 `transitionend` 事件
