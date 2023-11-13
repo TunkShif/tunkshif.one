@@ -17,7 +17,13 @@ export async function getStaticPaths() {
 
 <Layout title={`${post.data.title} | TunkShif`}>
   <h1 class="text-2xl font-semibold text-slate-800 dark:text-white">{post.data.title}</h1>
-  <div class="prose mx-auto max-w-3xl dark:prose-invert">
+  <div class="article prose mx-auto max-w-3xl dark:prose-invert">
     <Content />
   </div>
 </Layout>
+
+<style>
+  .article :global(.astro-code) {
+    background-color: rgb(30, 41, 59) !important;
+  }
+</style>
