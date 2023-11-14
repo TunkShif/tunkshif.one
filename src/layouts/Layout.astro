@@ -21,14 +21,12 @@ const { title } = Astro.props
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body
-    class:list={[
-      "max-w-3xl mx-4 lg:mx-auto mt-8 lg:mt-12",
-      "bg-white text-slate-600 dark:bg-slate-900 dark:text-slate-400"
-    ]}
-  >
+
+  <body class:list={["relative text-slate-600 dark:bg-slate-900 dark:text-slate-400"]}>
     <Header />
 
-    <slot />
+    <main class="mx-8 my-8 lg:mx-auto lg:max-w-3xl">
+      <slot />
+    </main>
   </body>
 </html>
