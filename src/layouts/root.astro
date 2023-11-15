@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from "astro:transitions"
 import Header from "@/components/header.astro"
 
 import "@fontsource-variable/inter"
@@ -6,7 +7,7 @@ import "@fontsource/dm-mono"
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" transition:animate="none">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Astro description" />
@@ -14,53 +15,54 @@ import "@fontsource/dm-mono"
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <slot name="head" />
+    <ViewTransitions />
   </head>
 
   <body class="relative text-secondary bg-secondary">
     <Header />
 
-    <main class="mx-8 my-8 lg:mx-auto lg:max-w-3xl">
+    <main transition:animate="fade" class="mx-8 my-8 lg:mx-auto lg:max-w-3xl">
       <slot />
     </main>
+
+    <script is:inline>
+      if (
+        localStorage.theme === "dark" ||
+        (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark")
+      } else {
+        document.documentElement.classList.remove("dark")
+      }
+    </script>
+
+    <style is:global>
+      :root {
+        --text-color-primary: theme(colors.slate.900);
+        --text-color-secondary: theme(colors.slate.700);
+
+        --surface-color-primary: theme(colors.slate.50);
+        --surface-color-secondary: theme(colors.white);
+
+        --border-color-primary: theme(colors.slate.900 / 10%);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --text-color-primary: theme(colors.slate.200);
+          --text-color-secondary: theme(colors.slate.400);
+
+          --surface-color-primary: theme(colors.slate.800);
+          --surface-color-secondary: theme(colors.slate.900);
+
+          --border-color-primary: theme(colors.white / 20%);
+        }
+      }
+
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
   </body>
 </html>
-
-<script is:inline>
-  if (
-    localStorage.theme === "dark" ||
-    (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)
-  ) {
-    document.documentElement.classList.add("dark")
-  } else {
-    document.documentElement.classList.remove("dark")
-  }
-</script>
-
-<style is:global>
-  :root {
-    --text-color-primary: theme(colors.slate.900);
-    --text-color-secondary: theme(colors.slate.700);
-
-    --surface-color-primary: theme(colors.slate.50);
-    --surface-color-secondary: theme(colors.white);
-
-    --border-color-primary: theme(colors.slate.900 / 10%);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --text-color-primary: theme(colors.slate.200);
-      --text-color-secondary: theme(colors.slate.400);
-
-      --surface-color-primary: theme(colors.slate.800);
-      --surface-color-secondary: theme(colors.slate.900);
-
-      --border-color-primary: theme(colors.white / 10%);
-    }
-  }
-
-  body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-</style>
