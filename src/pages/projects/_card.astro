@@ -14,41 +14,41 @@ const { project } = Astro.props
     <div class="flex items-center gap-2">
       <h3 class="text-primary font-medium line-clamp-1">{project.title}</h3>
 
-      <div class="flex items-center gap-2">
-        {
-          project.website && (
-            <a
-              href={project.website}
-              target="_blank"
-              rel="external noreferrer"
-              title="Website"
-              class="inline-block"
-            >
-              <span class="mt-0.5 i-lucide-globe-2 inline-flex justify-center items-center w-4 h-4 opacity-80" />
-              <span class="sr-only">website link</span>
-            </a>
-          )
-        }
-        {
-          project.github && (
-            <a
-              href={project.github}
-              target="_blank"
-              rel="external noreferrer"
-              title="GitHub"
-              class="inline-block"
-            >
-              <span class="mt-0.5 i-lucide-github inline-flex justify-center items-center w-4 h-4 opacity-80" />
-              <span class="sr-only">github link</span>
-            </a>
-          )
-        }
-      </div>
+      <ul class="flex gap-2">
+        {project.icons.map((name) => <Icon name={name} />)}
+      </ul>
     </div>
 
-    <ul class="flex gap-2">
-      {project.icons.map((name) => <Icon name={name} />)}
-    </ul>
+    <div class="flex items-center gap-2">
+      {
+        project.website && (
+          <a
+            href={project.website}
+            target="_blank"
+            rel="external noreferrer"
+            title="Website"
+            class="inline-block"
+          >
+            <span class="i-lucide-globe-2 inline-flex justify-center items-center w-4 h-4 opacity-80" />
+            <span class="sr-only">website link</span>
+          </a>
+        )
+      }
+      {
+        project.github && (
+          <a
+            href={project.github}
+            target="_blank"
+            rel="external noreferrer"
+            title="GitHub"
+            class="inline-block"
+          >
+            <span class="i-lucide-github inline-flex justify-center items-center w-4 h-4 opacity-80" />
+            <span class="sr-only">github link</span>
+          </a>
+        )
+      }
+    </div>
   </div>
 
   <div class="text-sm font-light line-clamp-2">{project.description}</div>

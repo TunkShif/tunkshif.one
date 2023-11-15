@@ -10,7 +10,9 @@ const icons: Record<string, string> = {
   html: "i-nonicons-html-16",
   css: "i-nonicons-css-16",
   kotlin: "i-nonicons-kotlin-16",
-  zig: "i-simple-icons-zig"
+  zig: "i-simple-icons-zig",
+  python: "i-nonicons-python-16",
+  c: "i-nonicons-c-16"
 }
 
 const { name } = Astro.props
@@ -18,6 +20,9 @@ const { name } = Astro.props
 const icon = icons[name]
 ---
 
-<li class:list={[icon, "inline-flex justify-center items-center h-4 w-4 opacity-80"]} title={name}>
+<li
+  title={name}
+  class:list={[icon, "mb-0.5 inline-flex justify-center items-center h-4 w-4 opacity-80"]}
+>
   <span class="sr-only">{name}</span>
 </li>

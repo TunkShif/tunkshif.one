@@ -58,12 +58,12 @@ const series = collection({
   }
 })
 
-const iconOptions = ["react", "elixir", "typescript", "html", "css", "kotlin", "zig"].map(
-  (value) => ({
+const iconOptions = ["react", "elixir", "typescript", "html", "css", "kotlin", "zig", "python", "c"]
+  .sort()
+  .map((value) => ({
     label: value,
     value
-  })
-)
+  }))
 
 const projects = collection({
   label: "Projects",
