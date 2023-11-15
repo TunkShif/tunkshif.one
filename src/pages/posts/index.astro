@@ -1,0 +1,40 @@
+---
+import RootLayout from "@/layouts/root.astro"
+import { Posts } from "@/libs/contents"
+import { format } from "date-fns"
+
+const posts = await Posts.all()
+---
+
+<RootLayout>
+  <title slot="head">Blog | tunkshif.one</title>
+
+  <h1 class="mb-4 text-primary text-2xl font-semibold">Posts</h1>
+  <section>
+    <ul class="flex flex-col gap-4">
+      {
+        posts.map((post) => (
+          <li>
+            <div class="flex flex-col gap-1">
+              <div>
+                <a
+                  class="underline decoration-transparent hover:decoration-current font-medium transition-colors duration-300 ease-in-out"
+                  href={`/posts/${post.slug}`}
+                  rel="prefetch-intent"
+                  data-astro-prefetch
+                >
+                  {post.data.title}
+                </a>
+              </div>
+              <div class="flex gap-2 text-sm">
+                <time class="tabular-nums" datetime={post.data.created.toISOString()}>
+                  {format(post.data.created, "yyyy-MM-dd")}
+                </time>
+              </div>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</RootLayout>

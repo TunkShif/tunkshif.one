@@ -1,0 +1,9 @@
+title: Sprout UI
+description: Unstyled and accessible components built for Phoenix Framework.
+icons:
+  - elixir
+  - typescript
+website: https://sprout-ui.tunkshif.one/
+github: https://github.com/TunkShif/sprout_ui
+pinned: false
+created: '2022-10-26'
