@@ -1,6 +1,6 @@
 ---
-import Hero from "@/components/hero.astro"
 import RootLayout from "@/layouts/root.astro"
+import Hero from "./_hero.astro"
 import { Posts } from "@/libs/contents"
 import { format } from "date-fns"
 
@@ -14,7 +14,7 @@ const posts = await Posts.recent()
 
   <section class="py-2">
     <div class="mb-4 flex justify-between items-center">
-      <h2 class="text-primary text-2xl font-semibold">
+      <h2 class="text-primary text-xl md:text-2xl font-semibold">
         <a
           class="underline decoration-transparent hover:decoration-current transition-colors duration-300 ease-in-out"
           href="/posts"
@@ -28,15 +28,18 @@ const posts = await Posts.recent()
     <ul class="space-y-2">
       {
         posts.map((post) => (
-          <li class="flex justify-between items-center">
+          <li class="flex flex-col md:flex-row justify-between gap-1">
             <a
-              class="underline decoration-transparent hover:decoration-current font-medium transition-colors duration-300 ease-in-out"
+              class="underline text-primary text-sm md:text-base decoration-transparent hover:decoration-current font-medium transition-colors duration-300 ease-in-out"
               href={`/posts/${post.slug}`}
               data-astro-prefetch
             >
               {post.data.title}
             </a>
-            <time class="text-sm tabular-nums" datetime={post.data.created.toISOString()}>
+            <time
+              class="shrink-0 text-xs md:text-sm tabular-nums"
+              datetime={post.data.created.toISOString()}
+            >
               {format(post.data.created, "yyyy-MM-dd")}
             </time>
           </li>
