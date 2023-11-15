@@ -1,10 +1,47 @@
 ---
 import Hero from "@/components/hero.astro"
 import RootLayout from "@/layouts/root.astro"
+import { Posts } from "@/libs/contents"
+import { format } from "date-fns"
+
+const posts = await Posts.recent()
 ---
 
 <RootLayout>
   <title slot="head">tunkshif.one</title>
 
   <Hero />
+
+  <section class="py-2">
+    <div class="mb-4 flex justify-between items-center">
+      <h2 class="text-primary text-2xl font-semibold">
+        <a
+          class="underline decoration-transparent hover:decoration-current transition-colors duration-300 ease-in-out"
+          href="/posts"
+          data-astro-prefetch
+        >
+          Recent Posts</a
+        >
+      </h2>
+    </div>
+
+    <ul class="space-y-2">
+      {
+        posts.map((post) => (
+          <li class="flex justify-between items-center">
+            <a
+              class="underline decoration-transparent hover:decoration-current font-medium transition-colors duration-300 ease-in-out"
+              href={`/posts/${post.slug}`}
+              data-astro-prefetch
+            >
+              {post.data.title}
+            </a>
+            <time class="text-sm tabular-nums" datetime={post.data.created.toISOString()}>
+              {format(post.data.created, "yyyy-MM-dd")}
+            </time>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
 </RootLayout>

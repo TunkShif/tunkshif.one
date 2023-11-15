@@ -41,20 +41,22 @@ import "@fontsource/dm-mono"
     --text-color-primary: theme(colors.slate.900);
     --text-color-secondary: theme(colors.slate.700);
 
-    --surface-color-primary: theme(colors.white);
+    --surface-color-primary: theme(colors.slate.50);
     --surface-color-secondary: theme(colors.white);
 
     --border-color-primary: theme(colors.slate.900 / 10%);
   }
 
-  .dark {
-    --text-color-primary: theme(colors.slate.200);
-    --text-color-secondary: theme(colors.slate.400);
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text-color-primary: theme(colors.slate.200);
+      --text-color-secondary: theme(colors.slate.400);
 
-    --surface-color-primary: theme(colors.slate.900);
-    --surface-color-secondary: theme(colors.slate.900);
+      --surface-color-primary: theme(colors.slate.800);
+      --surface-color-secondary: theme(colors.slate.900);
 
-    --border-color-primary: theme(colors.white / 10%);
+      --border-color-primary: theme(colors.white / 10%);
+    }
   }
 
   body {

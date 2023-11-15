@@ -1,5 +1,17 @@
 import { collection, config, fields } from "@keystatic/core"
 
+const isDev = process.env.NODE_ENV === "development"
+
+const localStorageProvider = { kind: "local" } as const
+const githubStorageProvider = {
+  kind: "github",
+  repo: {
+    owner: "TunkShif",
+    name: "tunkshif.one"
+  }
+} as const
+const storage = isDev ? localStorageProvider : githubStorageProvider
+
 const posts = collection({
   label: "Posts",
   slugField: "title",
@@ -9,10 +21,7 @@ const posts = collection({
   schema: {
     title: fields.slug({ name: { label: "Title" } }),
     created: fields.date({ label: "Created", defaultValue: { kind: "today" } }),
-    tags: fields.array(fields.text({ label: "Tag" }), {
-      label: "Tags",
-      itemLabel: (props) => props.value
-    }),
+    category: fields.text({ label: "Category" }),
     content: fields.document({
       label: "Content",
       formatting: true,
@@ -49,7 +58,12 @@ const series = collection({
   }
 })
 
-const iconOptions = ["react", "elixir"].map((value) => ({ label: value, value }))
+const iconOptions = ["react", "elixir", "typescript", "html", "css", "kotlin", "zig"].map(
+  (value) => ({
+    label: value,
+    value
+  })
+)
 
 const projects = collection({
   label: "Projects",
@@ -67,13 +81,7 @@ const projects = collection({
 })
 
 export default config({
-  storage: {
-    kind: "github",
-    repo: {
-      owner: "TunkShif",
-      name: "tunkshif.one"
-    }
-  },
+  storage,
   collections: {
     posts,
     series,

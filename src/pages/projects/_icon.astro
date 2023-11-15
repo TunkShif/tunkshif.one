@@ -1,0 +1,23 @@
+---
+export interface Props {
+  name: string
+}
+
+const icons: Record<string, string> = {
+  react: "i-nonicons-react-16",
+  elixir: "i-nonicons-elixir-16",
+  typescript: "i-nonicons-typescript-16",
+  html: "i-nonicons-html-16",
+  css: "i-nonicons-css-16",
+  kotlin: "i-nonicons-kotlin-16",
+  zig: "i-simple-icons-zig"
+}
+
+const { name } = Astro.props
+
+const icon = icons[name]
+---
+
+<li class:list={[icon, "inline-flex justify-center items-center h-4 w-4 opacity-80"]} title={name}>
+  <span class="sr-only">{name}</span>
+</li>

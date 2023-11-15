@@ -1,8 +1,8 @@
-const defaultTheme = require("tailwindcss/defaultTheme")
+import { getIconCollections, iconsPlugin } from "@egoist/tailwindcss-icons"
+import defaultTheme from "tailwindcss/defaultTheme"
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: "class",
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   theme: {
     extend: {
@@ -85,5 +85,10 @@ export default {
       })
     }
   },
-  plugins: [require("@tailwindcss/typography")]
+  plugins: [
+    require("@tailwindcss/typography"),
+    iconsPlugin({
+      collections: getIconCollections(["lucide", "nonicons", "simple-icons"])
+    })
+  ]
 }

@@ -1,5 +1,4 @@
 import markdoc from "@astrojs/markdoc"
-import prefetch from "@astrojs/prefetch"
 import react from "@astrojs/react"
 import tailwind from "@astrojs/tailwind"
 import vercel from "@astrojs/vercel/serverless"
@@ -8,7 +7,8 @@ import { defineConfig } from "astro/config"
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react(), markdoc(), keystatic(), tailwind(), prefetch()],
+  integrations: [react(), markdoc(), keystatic(), tailwind()],
   output: "hybrid",
-  adapter: vercel()
+  adapter: vercel(),
+  prefetch: true
 })
