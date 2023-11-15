@@ -1,6 +1,6 @@
 ---
+import RootLayout from "@/layouts/root.astro"
 import { getCollection, getEntry } from "astro:content"
-import Layout from "@/layouts/Layout.astro"
 
 const { slug } = Astro.params
 if (!slug) throw new Error("Slug not found")
@@ -15,12 +15,16 @@ export async function getStaticPaths() {
 }
 ---
 
-<Layout title={`${post.data.title} | TunkShif`}>
+<RootLayout>
+  <title slot="head">
+    {`${post.data.title} | tunkshif.one`}
+  </title>
+
   <h1 class="text-2xl font-semibold text-slate-800 dark:text-white">{post.data.title}</h1>
   <div class="article prose mx-auto max-w-3xl dark:prose-invert">
     <Content />
   </div>
-</Layout>
+</RootLayout>
 
 <style>
   .article :global(.astro-code) {

@@ -1,0 +1,36 @@
+---
+import RootLayout from "@/layouts/root.astro"
+import { getCollection } from "astro:content"
+import { compareDesc } from "date-fns"
+
+const posts = await getCollection("posts")
+const sorted = posts.sort((a, b) => compareDesc(new Date(a.data.created), new Date(b.data.created)))
+---
+
+<RootLayout>
+  <title slot="head">Blog | tunkshif.one</title>
+
+  <h1 class="text-xl font-semibold mb-4 text-slate-800 dark:text-white">All Posts</h1>
+  <section>
+    <ul class="flex flex-col gap-4">
+      {
+        sorted.map((post) => (
+          <li>
+            <div class="flex flex-col gap-1">
+              <div>
+                <a class="font-medium" href={`/posts/${post.slug}`} rel="prefetch-intent">
+                  {post.data.title}
+                </a>
+              </div>
+              <div class="flex gap-2 text-sm">
+                <time class="tabular-nums" datetime={post.data.created}>
+                  {post.data.created}
+                </time>
+              </div>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</RootLayout>

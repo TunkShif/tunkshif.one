@@ -2,12 +2,27 @@ const defaultTheme = require("tailwindcss/defaultTheme")
 
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: "class",
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   theme: {
     extend: {
       fontFamily: {
         sans: ["Inter Variable", "Inter", ...defaultTheme.fontFamily.sans],
         mono: ["DM Mono", ...defaultTheme.fontFamily.mono]
+      },
+      textColor: {
+        primary: "var(--text-color-primary)",
+        secondary: "var(--text-color-secondary)"
+      },
+      backgroundColor: {
+        primary: "var(--surface-color-primary)",
+        secondary: "var(--surface-color-secondary)",
+        border: {
+          primary: "var(--border-color-primary)"
+        }
+      },
+      borderColor: {
+        primary: "var(--border-color-primary)"
       },
       typography: (theme) => ({
         DEFAULT: {
@@ -49,12 +64,19 @@ export default {
             },
             h3: {
               marginTop: 0
+            },
+            img: {
+              borderRadius: theme("borderRadius.md"),
+              border: "solid 1px rgb(225 225 225 / 10%)"
             }
           }
         },
         invert: {
           css: {
             "--tw-prose-code": "rgb(171,178,191)",
+            pre: {
+              border: "solid 1px rgb(225 225 225 / 10%)"
+            },
             code: {
               backgroundColor: "rgb(30,41,59)"
             }
