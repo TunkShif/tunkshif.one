@@ -56,6 +56,9 @@ export default {
               borderRadius: theme("borderRadius.md"),
               boxShadow: theme("boxShadow.lg")
             },
+            "pre > code": {
+              backgroundColor: "inherit !important"
+            },
             h1: {
               fontSize: theme("fontSize.3xl")
             },

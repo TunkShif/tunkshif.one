@@ -1,3 +1,4 @@
+import { playground } from "@/components/blocks/playground"
 import { collection, config, fields } from "@keystatic/core"
 
 const isDev = process.env.NODE_ENV === "development"
@@ -11,6 +12,10 @@ const githubStorageProvider = {
   }
 } as const
 const storage = isDev ? localStorageProvider : githubStorageProvider
+
+const components = {
+  playground
+}
 
 const posts = collection({
   label: "Posts",
@@ -31,7 +36,8 @@ const posts = collection({
         directory: "src/assets/images/posts",
         publicPath: "../../assets/images/posts/"
       },
-      tables: true
+      tables: true,
+      componentBlocks: components
     })
   }
 })
