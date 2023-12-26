@@ -1,0 +1,10 @@
+---
+import {
+  Playground as PlaygroundBlock,
+  type PlaygroundProps
+} from "@/components/blocks/playground/component.tsx"
+
+export interface Props extends PlaygroundProps {}
+---
+
+<PlaygroundBlock client:load {...Astro.props} />
