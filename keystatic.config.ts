@@ -25,6 +25,7 @@ const posts = collection({
   format: { contentField: "content" },
   schema: {
     title: fields.slug({ name: { label: "Title" } }),
+    draft: fields.checkbox({ label: "Draft", defaultValue: true }),
     created: fields.date({ label: "Created", defaultValue: { kind: "today" } }),
     category: fields.text({ label: "Category" }),
     content: fields.document({
