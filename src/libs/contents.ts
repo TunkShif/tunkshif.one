@@ -4,7 +4,9 @@ import { compareDesc } from "date-fns"
 export const Posts = {
   async all() {
     const posts = await getCollection("posts")
-    return posts.sort((a, b) => compareDesc(a.data.created, b.data.created))
+    return posts
+      .filter((it) => !it.data.draft)
+      .sort((a, b) => compareDesc(a.data.created, b.data.created))
   },
   async recent(limit = 5) {
     const posts = await Posts.all()

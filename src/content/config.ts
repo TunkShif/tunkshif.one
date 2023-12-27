@@ -2,6 +2,7 @@ import { defineCollection, z } from "astro:content"
 
 const Post = z.object({
   title: z.string(),
+  draft: z.boolean().default(true),
   created: z.coerce.date(),
   category: z.string()
 })
