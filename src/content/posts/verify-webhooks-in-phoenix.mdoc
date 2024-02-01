@@ -4,4 +4,14 @@ draft: true
 created: '2024-02-01'
 category: Dev
 ---
-TODO
+## 问题背景
+
+在使用 Webhook 时，一般都会对传入的的请求进行某种方式的的校验。常见的校验方式为将传入的请求的请求体结合一个密钥通过 [HMAC](https://en.wikipedia.org/wiki/HMAC) 生成一个哈希值连带着请求传入，因此在服务端这边需要获取到原始请求体的值。
+
+这个本来应该很容易做到的需求在 Phoenix 框架中需要一些额外的工作来实现。原因是所有传入的请求都会经过 [Plug.Parsers](https://hexdocs.pm/plug/Plug.Parsers.html) 这个 Plug，然后请求体的内容则会根据 content-type header 被解析称对应的数据结果，同时原始的请求体内容也会被丢弃。
+
+为了解决这个问题，Plug.Parsers 额外提供了一个 `body_reader` 选项供用户传入自定义的 Body Reader 实现，以便在请求体被解析并丢弃之前读取到原始内容。
+
+## 代码实现
+
+Plug 提供了一个 `Plug.Conn.read_body/2` 函数来读取请求体，我们只需要在自己的 Body Reader 实现中调用该函数并将请求体内容缓存下来即可。
