@@ -1,6 +1,6 @@
 ---
 title: 在 Phoenix 中校验 Webhook 请求
-draft: true
+draft: false
 created: '2024-02-01'
 category: Dev
 ---
@@ -15,3 +15,92 @@ category: Dev
 ## 代码实现
 
 Plug 提供了一个 `Plug.Conn.read_body/2` 函数来读取请求体，我们只需要在自己的 Body Reader 实现中调用该函数并将请求体内容缓存下来即可。
+
+我们自行实现的 `read_body` 函数签名和返回值需要和 `Plug.Conn.read_body/2` 保持一致，其返回值类型为 `{:ok, binary(), Plug.Conn.t()} | {:more, binary(), Plug.Conn.t()} | {:error, term()}`， 对于内容过长的请求体，调用 `read_body/2` 会返回 `{:more, binary(), Plug.Conn.t()}`，需要多次调用才能获取到完整内容。
+
+另外我们只需要对特定路由的请求缓存请求体内容，`Plug.Conn` 当中提供了一个 `path_info` 字段，可以获取到当前请求的路径信息，基于此来判断是否需要缓存。
+
+完整代码实现如下所示：
+
+```elixir
+defmodule MyWeb.BodyReader do
+  # 用于存储原始请求体的 key
+  @store_key :raw_req_body
+
+  # 从 conn 中读取缓存的请求体的函数接口
+  def get_raw_body(%Plug.Conn{} = conn) do
+    case conn.private[@store_key] do
+      nil -> nil
+      chunks -> chunks |> Enum.reverse() |> Enum.join("")
+    end
+  end
+
+  # 自定义的 read_body/2 实现
+  def read_body(%Plug.Conn{} = conn, opts \\ []) do
+    case Plug.Conn.read_body(conn, opts) do
+      {:ok, binary, conn} ->
+        {:ok, binary, maybe_put_body_chunk(conn, binary)}
+
+      {:more, binary, conn} ->
+        {:more, binary, maybe_put_body_chunk(conn, binary)}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  # 根据 conn.path_info 判断是否需要缓存
+  defp enabled?(conn) do
+    case conn.path_info do
+      ["webhooks" | _rest] -> true # 仅当路径为 /webhooks/* 时启用缓存
+      _ -> false
+    end
+  end
+
+  defp maybe_put_body_chunk(conn, chunk) do
+    if enabled?(conn) do
+      put_body_chunk(conn, chunk)
+    else
+      conn
+    end
+  end
+
+  # 将缓存的请求体内容存入 conn.private 私有信息中
+  defp put_body_chunk(%Plug.Conn{} = conn, chunk) when is_binary(chunk) do
+    chunks = conn.private[@store_key] || []
+    Plug.Conn.put_private(conn, @store_key, [chunk | chunks])
+  end
+end
+```
+
+最后只需要在启用 `Plug.Parsers` 时传入 `body_reader` 选项即可，如果使用 Phoenix 框架，需要在 `endpoint.ex` 文件中修改如下：
+
+```elixir
+plug Plug.Parsers,
+  parsers: [:urlencoded, :multipart, :json],
+  pass: ["*/*"],
+  body_reader: {MyWeb.BodyReader, :read_body, []}, # <- 添加该行内容
+  json_decoder: Phoenix.json_library()
+```
+
+在 Controller 中调用 `MyWeb.BodyReader.read_body/2` 来获取缓存的原始请求体内容：
+
+```elixir
+alias MyWeb.BodyReader
+def index(conn, _params) do
+  payload = BodyReader.get_raw_body(conn)
+end
+```
+
+此外，计算请求体内容的 HMAC 可以通过 Erlang 标准库的 `:crypto` 模块实现：
+
+```elixir
+:crypto.mac(:hmac, :sha256, "secret", "request body")
+```
+
+# 参考
+
+上述代码实现参考自下列内容：
+
+- [https://github.com/phoenixframework/phoenix/issues/459#issuecomment-862203762](https://github.com/phoenixframework/phoenix/issues/459#issuecomment-862203762)
+- [https://dashbit.co/blog/how-we-verify-webhooks](https://dashbit.co/blog/how-we-verify-webhooks)
