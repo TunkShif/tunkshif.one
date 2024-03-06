@@ -1,8 +1,0 @@
-title: Lox Project
-description: Lox programming language interpreter implementations in Kotlin and Zig.
-icons:
-  - kotlin
-  - zig
-github: https://github.com/TunkShif/lox-project
-pinned: false
-created: '2022-02-06'
