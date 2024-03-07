@@ -7,12 +7,12 @@ export default defineConfig({
   presets: [
     "@pandacss/preset-base",
     createPreset({
-      accentColor: "blue",
+      accentColor: "indigo",
       grayColor: "slate",
       borderRadius: "sm"
     })
   ],
-  include: ["./app/routes/**/*.{ts,tsx,js,jsx}", "./app/components/**/*.{ts,tsx,js,jsx}"],
+  include: ["./app/**/*.{ts,tsx,js,jsx}"],
   exclude: [],
   theme: {
     extend: {

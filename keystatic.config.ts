@@ -1,8 +1,8 @@
 import { collection, config, fields } from "@keystatic/core"
-
-const isDevelopment = process.env.NODE_ENV === "development"
+import { isDevelopment } from "~/libs/environment"
 
 const localStorageProvider = { kind: "local" } as const
+// TODO: replace the options with environment variables
 const githubStorageProvider = {
   kind: "github",
   repo: {
@@ -16,24 +16,25 @@ const posts = collection({
   label: "Posts",
   slugField: "title",
   path: "content/posts/*/",
+  columns: ["draft", "category", "created"],
   entryLayout: "content",
-  format: { contentField: "content" },
+  format: {
+    contentField: "content"
+  },
   schema: {
     title: fields.slug({ name: { label: "Title" } }),
     draft: fields.checkbox({ label: "Draft", defaultValue: true }),
     created: fields.date({ label: "Created", defaultValue: { kind: "today" } }),
     category: fields.text({ label: "Category" }),
-    content: fields.document({
+    content: fields.mdx({
       label: "Content",
-      formatting: true,
-      dividers: true,
-      links: true,
-      tables: true,
-      images: {
-        directory: "content/images",
-        publicPath: "/content/images",
-        schema: {
-          title: fields.text({ label: "Caption" })
+      options: {
+        image: {
+          directory: "content/images",
+          publicPath: "/content/images",
+          schema: {
+            title: fields.text({ label: "Caption" })
+          }
         }
       }
     })
