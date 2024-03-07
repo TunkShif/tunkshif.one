@@ -1,51 +1,43 @@
 {
-  "name": "website",
+  "name": "@tunkshif/website",
   "private": true,
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "prepare": "pnpm run \"/^codegen:.*/\"",
+    "prepare": "panda codegen",
     "dev": "remix vite:dev",
     "build": "remix vite:build",
-    "start": "wrangler pages dev ./build/client",
-    "deploy": "wrangler pages deploy ./build/client",
-    "format": "pnpm biome check --apply --linter-enabled=false ./app",
+    "start": "remix-serve ./build/server/index.js",
+    "format": "biome check --apply --linter-enabled=false ./app",
     "lint:tsc": "tsc",
-    "lint:biome": "biome lint ./app",
-    "codegen:wrangler": "wrangler types",
-    "codegen:pandacss": "panda codegen"
+    "lint:biome": "biome lint ./app"
   },
   "dependencies": {
     "@ark-ui/react": "^2.2.3",
-    "@remix-run/cloudflare": "^2.8.0",
-    "@remix-run/cloudflare-pages": "^2.8.0",
+    "@fontsource-variable/figtree": "^5.0.20",
+    "@fontsource/dm-mono": "^5.0.19",
+    "@keystatic/core": "^0.5.1",
+    "@keystatic/remix": "^5.0.0",
+    "@remix-run/node": "^2.8.0",
     "@remix-run/react": "^2.8.0",
+    "@remix-run/serve": "^2.8.0",
+    "@vercel/remix": "^2.8.0",
     "isbot": "^4.1.0",
-    "miniflare": "^3.20231030.4",
+    "lucide-react": "^0.350.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.5.3",
-    "@cloudflare/workers-types": "^4.20230518.0",
     "@pandacss/dev": "^0.34.1",
     "@park-ui/panda-preset": "^0.36.1",
     "@remix-run/dev": "^2.8.0",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
-    "@typescript-eslint/eslint-plugin": "^6.7.4",
-    "@typescript-eslint/parser": "^6.7.4",
-    "eslint": "^8.38.0",
-    "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.28.1",
-    "eslint-plugin-jsx-a11y": "^6.7.1",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "node-fetch": "^3.3.2",
     "typescript": "^5.1.6",
     "vite": "^5.1.0",
-    "vite-tsconfig-paths": "^4.2.1",
-    "wrangler": "^3.24.0"
+    "vite-tsconfig-paths": "^4.2.1"
   },
   "engines": {
     "node": ">=18.0.0"

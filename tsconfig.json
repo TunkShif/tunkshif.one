@@ -14,7 +14,7 @@
       "ES2022"
     ],
     "types": [
-      "@remix-run/cloudflare",
+      "@remix-run/node",
       "vite/client"
     ],
     "isolatedModules": true,

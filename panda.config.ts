@@ -15,7 +15,14 @@ export default defineConfig({
   include: ["./app/routes/**/*.{ts,tsx,js,jsx}", "./app/components/**/*.{ts,tsx,js,jsx}"],
   exclude: [],
   theme: {
-    extend: {}
+    extend: {
+      tokens: {
+        fonts: {
+          "fig-tree": { value: "var(--font-fig-tree), sans-serif" },
+          "dm-mono": { value: "var(--font-dm-mono), monospace" }
+        }
+      }
+    }
   },
   outdir: "styled-system"
 })
