@@ -16,9 +16,6 @@
   },
   "linter": {
     "enabled": true,
-    "ignore": [
-      "./app/components/ui/*.tsx"
-    ],
     "rules": {
       "recommended": true
     }

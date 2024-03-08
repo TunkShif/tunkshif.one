@@ -1,9 +1,9 @@
 import "@fontsource-variable/figtree"
 import "@fontsource/dm-mono"
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "@remix-run/react"
-import { Flex } from "styled-system/jsx"
-import { SideBar } from "~/components/layout/side-bar"
+import { Box, Flex } from "styled-system/jsx"
 import "~/index.css"
+import { SideBar } from "./components/layout/side-bar"
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -27,7 +27,9 @@ export default function App() {
   return (
     <Flex position="relative" w="full" h="full" minH="screen">
       <SideBar />
-      <Outlet />
+      <Box flex="1">
+        <Outlet />
+      </Box>
     </Flex>
   )
 }

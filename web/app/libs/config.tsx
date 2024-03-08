@@ -1,4 +1,4 @@
-import { CubeIcon, DocumentTextIcon, HomeIcon, PencilSquareIcon } from "@heroicons/react/20/solid"
+import { ArchiveBoxIcon, CubeIcon, HomeIcon, PencilSquareIcon } from "@heroicons/react/20/solid"
 
 export const NAVIGATIONS = [
   {
@@ -11,7 +11,7 @@ export const NAVIGATIONS = [
     key: "posts",
     label: "Posts",
     route: "/posts",
-    icon: DocumentTextIcon
+    icon: ArchiveBoxIcon
   },
   {
     key: "journals",
