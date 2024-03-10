@@ -4,4 +4,5 @@
   --font-fig-tree: "Figtree Variable";
   --font-dm-mono: "DM Mono";
   --global-font-body: var(--font-fig-tree);
+  --global-font-mono: var(--font-dm-mono);
 }

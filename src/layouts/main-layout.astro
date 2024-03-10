@@ -1,5 +1,5 @@
 ---
-import { Box, Flex } from "styled-system/jsx"
+import { Flex } from "styled-system/jsx"
 import RootLayout from "./root-layout.astro"
 import SideBar from "~/components/side-bar.astro"
 
@@ -11,10 +11,10 @@ const { title } = Astro.props
 ---
 
 <RootLayout title={title}>
-  <Flex position="relative" w="full" h="full" minH="screen">
+  <Flex position="relative" w="full" h="full" minH="screen" overflow="auto">
     <SideBar />
-    <Box flex="1">
+    <Flex w="full" flex="1">
       <slot />
-    </Box>
+    </Flex>
   </Flex>
 </RootLayout>

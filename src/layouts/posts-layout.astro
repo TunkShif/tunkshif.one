@@ -1,0 +1,120 @@
+---
+import { getCollection } from "astro:content"
+import { format } from "~/libs/date-time"
+import { Flex, Box, HStack, Stack } from "styled-system/jsx"
+import { stack } from "styled-system/patterns"
+import { Heading } from "~/components/ui/heading"
+import { Text } from "~/components/ui/text"
+import { isActiveRoute } from "~/libs/router"
+import MainLayout from "~/layouts/main-layout.astro"
+import { compareDesc } from "date-fns"
+import { css } from "styled-system/css"
+
+export interface Props {
+  title: string
+  isArticleView?: boolean
+}
+
+const { title, isArticleView } = Astro.props
+
+const posts = (await getCollection("posts", (item) => !item.data.draft)).sort((a, b) =>
+  compareDesc(a.data.created, b.data.created)
+)
+---
+
+<MainLayout title={title}>
+  <Flex
+    w="full"
+    bgImage="radial-gradient(token(colors.bg.emphasized) 1px, transparent 0)"
+    bgSize="20px 20px"
+    bgPosition="-19px -19px"
+    data-article={isArticleView || undefined}
+  >
+    <Box
+      className={css({
+        w: "full",
+        "[data-article] &": {
+          display: "none",
+          w: "auto",
+          lg: {
+            display: "flex"
+          }
+        }
+      })}
+    >
+      <Stack
+        position="relative"
+        gap="2"
+        w="full"
+        h="full"
+        lg={{ w: "80" }}
+        minH="screen"
+        maxH="screen"
+        bg="bg.canvas"
+        borderRightWidth="1"
+      >
+        <HStack position="sticky" w="full" h="12" px="4" top="0" insetX="0">
+          <Heading fontWeight="semibold" as="h1"> Posts </Heading>
+        </HStack>
+
+        <Box px="2">
+          <ul class={stack({ gap: "1.5" })}>
+            {
+              posts.map((post) => (
+                <li>
+                  <a
+                    href={`/posts/${post.slug}`}
+                    aria-current={
+                      isActiveRoute(Astro.url.pathname, `/posts/${post.slug}`) ? "page" : undefined
+                    }
+                    class={stack({
+                      px: "2",
+                      py: "2",
+                      gap: "2",
+                      rounded: "md",
+                      transition: "colors",
+                      transitionDuration: "fast",
+                      transitionTimingFunction: "ease-in-out",
+                      _hover: { bg: "gray.4" },
+                      _currentPage: {
+                        bg: "accent.default",
+                        color: "accent.fg",
+                        _hover: { bg: "accent.default" },
+                        "& [data-label]": {
+                          color: "gray.6"
+                        }
+                      },
+                      "& [data-label]": {
+                        color: "fg.subtle"
+                      }
+                    })}
+                  >
+                    <Heading size="sm" fontWeight="medium" as="h2">
+                      {post.data.title}
+                    </Heading>
+
+                    <HStack justifyContent="space-between" data-label>
+                      <Text size="sm" color="inherit">
+                        {post.data.category}
+                      </Text>
+                      <Text
+                        size="sm"
+                        color="inherit"
+                        dateTime={post.data.created.toISOString()}
+                        as="time"
+                      >
+                        {format(post.data.created)}
+                      </Text>
+                    </HStack>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </Box>
+      </Stack>
+    </Box>
+
+    <slot />
+  </Flex>
+</MainLayout>

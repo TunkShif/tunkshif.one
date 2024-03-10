@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "prepare": "panda codegen",
-    "dev": "astro dev",
+    "dev": "astro dev --host",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@ark-ui/react": "^2.2.3",
+    "@astrojs/mdx": "^2.1.1",
     "@astrojs/react": "^3.0.10",
     "@fontsource-variable/figtree": "^5.0.20",
     "@fontsource/dm-mono": "^5.0.19",
@@ -21,6 +22,7 @@
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "astro": "^4.4.15",
+    "date-fns": "^3.3.1",
     "lucide-react": "^0.354.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -32,6 +34,7 @@
     "@pandacss/dev": "^0.34.3",
     "@park-ui/panda-preset": "^0.36.1",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "pandacss-preset-typography": "^0.1.5",
     "prettier": "^3.2.5",
     "prettier-plugin-astro": "^0.13.0"
   }

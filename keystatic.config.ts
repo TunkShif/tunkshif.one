@@ -44,11 +44,27 @@ const posts = collection({
   schema: {
     title: fields.slug({ name: { label: "Title" } }),
     draft: fields.checkbox({ label: "Draft", defaultValue: true }),
+    summary: fields.text({ label: "Summary", multiline: true }),
+    language: fields.select({
+      label: "Language",
+      options: [
+        { label: "中文", value: "zh" },
+        { label: "English", value: "en" }
+      ],
+      defaultValue: "zh"
+    }),
     created: fields.date({
       label: "Created",
       defaultValue: { kind: "today" }
     }),
-    category: fields.text({ label: "Category" }),
+    category: fields.select({
+      label: "Category",
+      options: [
+        { label: "Dev", value: "Dev" },
+        { label: "Life", value: "Life" }
+      ],
+      defaultValue: "Dev"
+    }),
     topics: fields.array(fields.text({ label: "Topic" }), {
       label: "Topics",
       itemLabel: (item) => item.value

@@ -1,5 +1,6 @@
 ---
 import settings from "~/settings.json"
+import { ViewTransitions } from "astro:transitions"
 import "@fontsource-variable/figtree"
 import "@fontsource/dm-mono"
 import "~/styles.css"
@@ -23,6 +24,7 @@ const siteTitle = title ? `${title} - ${titleSuffix}` : titleSuffix
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{siteTitle}</title>
+    <ViewTransitions />
   </head>
   <body>
     <slot />
