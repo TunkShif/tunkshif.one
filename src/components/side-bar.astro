@@ -1,0 +1,62 @@
+---
+import { Box, Flex, Stack, styled } from "styled-system/jsx"
+import { hstack, stack } from "styled-system/patterns"
+import { Text } from "~/components/ui/text"
+import settings from "~/settings.json"
+import { PresetIcon } from "./icon-set"
+
+const currentRoute = Astro.url.pathname
+const isRouteActive = (route: string) => {
+  const isIndex = route === "/"
+  return currentRoute === route || (!isIndex && currentRoute.startsWith(route))
+}
+
+const navigations = settings.navigations
+
+const nav = hstack({
+  px: "2",
+  py: "2",
+  rounded: "md",
+  alignItems: "center",
+  transition: "colors",
+  transitionDuration: "fast",
+  transitionTimingFunction: "ease-in-out",
+  _hover: { bg: "gray.4" },
+  _currentPage: {
+    bg: "accent.default",
+    color: "accent.fg",
+    _hover: { bg: "accent.default" }
+  }
+})
+---
+
+<Box bg="bg.default" w="60" h="full" minH="screen" maxH="screen" borderRightWidth="1">
+  <Stack gap="4">
+    <Flex h="12" px="4" alignItems="center" borderBottomWidth="1">
+      <Text fontWeight="bold" verticalAlign="middle"> Tristan Yang </Text>
+    </Flex>
+
+    <styled.nav px="2">
+      <ul class={stack({ gap: "1.5" })}>
+        {
+          navigations.map(({ name, route, icon }) => {
+            return (
+              <li>
+                <a
+                  class={nav}
+                  href={route}
+                  aria-current={isRouteActive(route) ? "page" : undefined}
+                >
+                  <PresetIcon name={icon} size="sm" transition="colors 200ms ease-in-out" />
+                  <Text size="sm" fontWeight="medium">
+                    {name.name}
+                  </Text>
+                </a>
+              </li>
+            )
+          })
+        }
+      </ul>
+    </styled.nav>
+  </Stack>
+</Box>

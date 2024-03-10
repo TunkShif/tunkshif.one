@@ -1,0 +1,37 @@
+{
+  "titleSuffix": "Tristan Yang (@TunkShif)",
+  "navigations": [
+    {
+      "name": {
+        "name": "Home",
+        "slug": "home"
+      },
+      "route": "/",
+      "icon": "hero-home"
+    },
+    {
+      "name": {
+        "name": "Posts",
+        "slug": "posts"
+      },
+      "route": "/posts",
+      "icon": "hero-archive-box"
+    },
+    {
+      "name": {
+        "name": "Journals",
+        "slug": "journals"
+      },
+      "route": "/journals",
+      "icon": "hero-pencil-square"
+    },
+    {
+      "name": {
+        "name": "Projects",
+        "slug": "projects"
+      },
+      "route": "/projects",
+      "icon": "hero-cube"
+    }
+  ]
+}
