@@ -76,10 +76,10 @@ export default defineConfig({
               value: "{colors.slate.2}"
             },
             thBorder: {
-              value: "{colors.border.subtle}"
+              value: "{colors.border.default}"
             },
             tdBorder: {
-              value: "{colors.border.subtle}"
+              value: "{colors.border.default}"
             }
           }
         }

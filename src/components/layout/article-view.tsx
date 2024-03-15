@@ -79,7 +79,7 @@ export const ArticleView = ({
               {toIntlFormatDate(post.data.created)}
             </Text>
           </Box>
-          <Heading size="3xl" fontWeight="semibold" as="h1">
+          <Heading size="3xl" fontWeight="bold" as="h1">
             {post.data.title}
           </Heading>
         </Stack>
