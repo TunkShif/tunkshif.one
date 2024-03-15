@@ -8,7 +8,6 @@ import { defineConfig } from "astro/config"
 export default defineConfig({
   integrations: [react(), mdx(), keystatic()],
   output: "hybrid",
-  prefetch: true,
   markdown: {
     shikiConfig: {
       themes: {

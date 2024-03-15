@@ -43,6 +43,8 @@ const settings = singleton({
   }
 })
 
+// TODO: (refactor) code reuse
+
 const posts = collection({
   label: "Posts",
   slugField: "title",
@@ -72,6 +74,7 @@ const posts = collection({
       label: "Category",
       options: [
         { label: "Dev", value: "Dev" },
+        { label: "Language", value: "Language" },
         { label: "Life", value: "Life" }
       ],
       defaultValue: "Dev"
@@ -92,12 +95,62 @@ const posts = collection({
   }
 })
 
+const journals = collection({
+  label: "Journals",
+  slugField: "title",
+  path: "src/content/journals/*",
+  columns: ["draft", "category", "created"],
+  entryLayout: "content",
+  format: {
+    contentField: "content"
+  },
+  schema: {
+    title: fields.slug({ name: { label: "Title" } }),
+    draft: fields.checkbox({ label: "Draft", defaultValue: true }),
+    summary: fields.text({ label: "Summary", multiline: true }),
+    language: fields.select({
+      label: "Language",
+      options: [
+        { label: "中文", value: "zh" },
+        { label: "English", value: "en" }
+      ],
+      defaultValue: "zh"
+    }),
+    created: fields.date({
+      label: "Created",
+      defaultValue: { kind: "today" }
+    }),
+    category: fields.select({
+      label: "Category",
+      options: [
+        { label: "Dev", value: "Dev" },
+        { label: "Language", value: "Language" }
+      ],
+      defaultValue: "Dev"
+    }),
+    topics: fields.array(fields.text({ label: "Topic" }), {
+      label: "Topics",
+      itemLabel: (item) => item.value
+    }),
+    content: fields.mdx({
+      label: "Content",
+      options: {
+        image: {
+          directory: "src/assets/images/journals",
+          publicPath: "../../assets/images/journals/"
+        }
+      }
+    })
+  }
+})
+
 export default config({
   storage,
   singletons: {
     settings
   },
   collections: {
-    posts
+    posts,
+    journals
   }
 })

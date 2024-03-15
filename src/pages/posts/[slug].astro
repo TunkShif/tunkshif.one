@@ -1,15 +1,11 @@
 ---
-import { omit } from "radash"
-import invariant from "tiny-invariant"
 import { ArticleView } from "~/components/layout/article-view"
 import PostsLayout from "~/layouts/posts-layout.astro"
 import { Posts } from "~/libs/collections"
-import "~/styles/prose.css"
 
 const { slug } = Astro.params
 
 const post = await Posts.bySlug(slug)
-invariant(post, `Missing post with slug "${slug}"`)
 
 const { Content } = await post.render()
 
@@ -20,7 +16,7 @@ export async function getStaticPaths() {
 ---
 
 <PostsLayout title={post.data.title} isArticleView>
-  <ArticleView post={omit(post, ["body"])} back="/posts" client:load>
+  <ArticleView post={post} back="/posts" client:load>
     <Content />
   </ArticleView>
 </PostsLayout>

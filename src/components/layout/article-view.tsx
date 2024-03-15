@@ -7,15 +7,22 @@ import { useScrollHandler } from "~/components/layout/use-scroll-handler"
 import { Heading } from "~/components/ui/heading"
 import { IconButton } from "~/components/ui/icon-button"
 import { Text } from "~/components/ui/text"
-import type { Post } from "~/libs/collections"
 import { toIntlFormatDate } from "~/libs/helper/formatter"
+
+type Article = {
+  data: {
+    title: string
+    category: string
+    created: Date
+  }
+}
 
 export const ArticleView = ({
   post,
   back,
   children
 }: {
-  post: Omit<Post, "body">
+  post: Article
   back: string
   children: ReactNode
 }) => {
@@ -46,6 +53,7 @@ export const ArticleView = ({
             </a>
           </IconButton>
           <Heading
+            truncate
             opacity="0"
             transition="opacity {durations.slow} ease-in-out"
             className={css({ "[data-scrolled=true] &": { opacity: "1" } })}

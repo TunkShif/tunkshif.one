@@ -1,8 +1,8 @@
 import type { APIRoute } from "astro"
 import { range } from "radash"
-import { Posts } from "~/libs/collections"
+import { Journals } from "~/libs/collections"
 
-const paginated = await Posts.paginated()
+const paginated = await Journals.paginated()
 
 export const GET: APIRoute = ({ params }) => {
   const page = Number.parseInt(params.page || "1")

@@ -1,0 +1,40 @@
+---
+import { css } from "styled-system/css"
+import { Box, Flex } from "styled-system/jsx"
+import MainLayout from "~/layouts/main-layout.astro"
+import "~/styles/prose.css"
+
+export interface Props {
+  title: string
+  isArticleView?: boolean
+}
+
+const { title, isArticleView } = Astro.props
+---
+
+<MainLayout title={title}>
+  <Flex
+    w="full"
+    bgImage="radial-gradient(token(colors.bg.emphasized) 1px, transparent 0)"
+    bgSize="20px 20px"
+    bgPosition="-19px -19px"
+    data-article-view={isArticleView || undefined}
+  >
+    <Box
+      className={css({
+        w: "full",
+        "[data-article-view] &": {
+          display: "none",
+          w: "auto",
+          lg: {
+            display: "flex"
+          }
+        }
+      })}
+    >
+      <slot name="list" />
+    </Box>
+
+    <slot />
+  </Flex>
+</MainLayout>

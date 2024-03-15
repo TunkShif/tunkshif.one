@@ -1,0 +1,21 @@
+---
+import JournalsLayout from "~/layouts/journals-layout.astro"
+import { ArticleView } from "~/components/layout/article-view"
+import { Journals } from "~/libs/collections"
+
+const { slug } = Astro.params
+
+const journal = await Journals.bySlug(slug)
+const { Content } = await journal.render()
+
+export async function getStaticPaths() {
+  const journals = await Journals.all()
+  return journals.map((journal) => ({ params: { slug: journal.slug } }))
+}
+---
+
+<JournalsLayout title={journal.data.title} isArticleView>
+  <ArticleView post={journal} back="/journals" client:load>
+    <Content />
+  </ArticleView>
+</JournalsLayout>

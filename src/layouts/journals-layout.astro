@@ -1,7 +1,7 @@
 ---
-import { PostList } from "~/components/layout/post-list"
-import { Posts } from "~/libs/collections"
+import { JournalList } from "~/components/layout/journal-list"
 import ListLayout from "~/layouts/list-layout.astro"
+import { Journals } from "~/libs/collections"
 
 export interface Props {
   title: string
@@ -10,17 +10,18 @@ export interface Props {
 
 const { title, isArticleView } = Astro.props
 
-const posts = await Posts.paginated()
-const initialPosts = posts[0]
+const journals = await Journals.paginated()
+const initialJournals = journals[0]
 ---
 
 <ListLayout title={title} isArticleView={isArticleView}>
-  <PostList
+  <JournalList
     slot="list"
     initialRoute={Astro.url.pathname}
-    initialPosts={initialPosts}
+    initialJournals={initialJournals}
     client:load
     transition:persist
   />
+
   <slot />
 </ListLayout>

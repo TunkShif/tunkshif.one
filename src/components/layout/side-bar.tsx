@@ -1,13 +1,12 @@
 import { Presence } from "@ark-ui/react"
 import { MenuIcon, MoonIcon, SunIcon, SunMoonIcon, XIcon } from "lucide-react"
 import { useEffect, useState } from "react"
-import { Box, Center, Flex, HStack, Stack, styled } from "styled-system/jsx"
+import { Box, Flex, HStack, Stack, styled } from "styled-system/jsx"
 import { hstack, stack } from "styled-system/patterns"
 import { PresetIcon } from "~/components/icon-set"
 import { useRoute } from "~/components/layout/use-route"
 import { IconButton } from "~/components/ui/icon-button"
 import { Text } from "~/components/ui/text"
-import * as ToggleGroup from "~/components/ui/toggle-group"
 import { isActiveRoute } from "~/libs/helper/route"
 import { useGlobalStore } from "~/libs/store"
 import settings from "~/settings.json"
@@ -71,6 +70,13 @@ export const SideBarOverlay = () => {
 export const SideBar = ({ initialRoute }: { initialRoute: string }) => {
   const currentRoute = useRoute(initialRoute)
   const isSideBarOpen = useGlobalStore((state) => state.isSideBarOpen)
+  const closeSideBar = useGlobalStore((state) => state.closeSideBar)
+
+  useEffect(() => {
+    document.addEventListener("astro:page-load", closeSideBar)
+    return () => document.removeEventListener("astro:page-load", closeSideBar)
+  }, [closeSideBar])
+
   return (
     <Stack
       position="absolute"
@@ -112,7 +118,6 @@ export const SideBar = ({ initialRoute }: { initialRoute: string }) => {
                   <a
                     className={nav}
                     href={route}
-                    data-astro-prefetch
                     aria-current={isActiveRoute(currentRoute, route) ? "page" : undefined}
                   >
                     <PresetIcon name={icon} size="sm" transition="colors 200ms ease-in-out" />
