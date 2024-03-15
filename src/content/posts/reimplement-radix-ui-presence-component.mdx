@@ -1,0 +1,236 @@
+---
+title: 复刻 Radix UI 中的 Presence 组件
+draft: false
+summary: 状态机驱动的组件挂载卸载时的过渡动画实现
+language: zh
+created: 2023-10-28
+category: Dev
+topics:
+  - front-end
+---
+
+给 HTML 元素增加显隐状态的过渡动画效果是一个很常见的需求，但在通过纯 CSS 的 transition 或 animation 方案实现起来时总会存在一些麻烦的问题：
+
+- CSS 的 transition 和 animation 无法作用于 `display` 属性，使用该属性来隐藏元素时的退场动画效果不会显示。
+
+- 在使用 React 或 Vue 等框架的时候，组件在卸载时对应的 DOM 元素也会被移除，导致退场动画来不及触发元素已经被移除。
+
+而目前已经存在的解决方案主要包括：
+
+- 使用 `opacity: 0` 或 `visibility: hidden` 等比较 tricky 的手段来实现隐藏元素，但这种方法存在影响文档布局以及无障碍相关的问题，因此并**不推荐**该方法。这类方法常见于 StackOverflow 中“_为什么我的动画效果对_`display: none`_不起作用的相关问题_“回答下。
+
+- 监听 [`transitionend`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionend_event) 或 [`animationend`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationend_event) 相关的事件，在确保过渡动画结束后再将元素隐藏或移除。当然有些地方也会获取到动画时间，然后使用 `setTimeout` 的回调去实现。这是比较常见的解决方案，例如下面这些库：
+
+  - [Bootstrap](https://github.com/twbs/bootstrap/blob/f7426c08e7818ff3eb77f7c7cde54ca6d28009b2/js/src/util/index.js#L229)：监听 `transitionend` 事件
+
+  - [Headless UI](https://github.com/tailwindlabs/headlessui/blob/76dd10ea554fa1d05576be2090612a3c3b04f9cb/packages/%40headlessui-react/src/components/transitions/utils/transition.ts#L13) 的 [Transition](https://headlessui.com/react/transition) 组件：监听 `transitionend` 事件
+
+  - [Radix UI](https://github.com/radix-ui/primitives/blob/c31c97274ff357aea99afe6c01c1c8c58b6356e0/packages/react/presence/src/Presence.tsx#L100) 的 [Presence](https://github.com/radix-ui/primitives/blob/c31c97274ff357aea99afe6c01c1c8c58b6356e0/packages/react/presence/README.md) 组件：监听 `animationend` 事件
+
+  - [Phoenix LiveView](https://github.com/phoenixframework/phoenix_live_view/blob/7acbc6b9761fa6a76eea44fa31aaac95d99e75d8/assets/js/phoenix_live_view/live_socket.js#L932) 的 [`JS.transition`](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.JS.html#transition/1) 指令：使用 `setTimeout` 实现
+
+- 使用 [Framer Motion ](https://www.framer.com/motion/examples/#exit-animations)等更加复杂专业的动画库。
+
+其中我觉得 Radix UI 的 Presence 组件的设计能够让使用者很方便的给元素添加退场动画，例如下面这个来自其官网的 [Animation Guide](https://www.radix-ui.com/primitives/docs/guides/animation) 中的例子：
+
+```css
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.DialogOverlay[data-state="open"],
+.DialogContent[data-state="open"] {
+  animation: fadeIn 300ms ease-out;
+}
+
+.DialogOverlay[data-state="closed"],
+.DialogContent[data-state="closed"] {
+  animation: fadeOut 300ms ease-in;
+}
+```
+
+我们只需要根据组件的状态设置对应的动画，不用担心组件在动画执行前就被卸载。
+
+这一相关功能实现在 `usePresence` 这个 React Hook 当中。此外这个基于 SolidJS 的组件库 [Kobalte](https://github.com/kobaltedev/kobalte/blob/2f5802af077f0bb66d507ee6f38163d33a1b4f84/packages/core/src/primitives/create-presence/create-presence.ts) 也参考实现了这一 hook 的功能。接下来我们要实现一个原生 JS 的版本。
+
+## 解读 Presence 组件实现
+
+整个组件可以看作一个状态机，包含下列三种状态：
+
+- mounted：表示组件已经挂载
+
+- unmountSuspended：表示组件即将挂载，目前正在等待退场动画结束
+
+- unmounted：组件已经挂载
+
+因此当状态机处于 `unmounted` 状态时，表示组件应当卸载。
+
+![Presence state machine](../../assets/images/posts/reimplement-radix-ui-presence-component/presence-state-machine.png)
+
+Radix UI 当中利用了 React 的 `useReducer` 很简洁地实现了状态机的功能，下面是一个原生 TS 的实现：
+
+```typescript
+// check https://fettblog.eu/typescript-union-to-intersection/
+type UnionToIntersection<T> = (T extends any ? (x: T) => any : never) extends (x: infer R) => any
+  ? R
+  : never
+
+type Machine<State extends string> = { [state in State]: { [event: string]: State } }
+type MachineState<T> = keyof T
+type MachineEvent<T> = keyof UnionToIntersection<T[keyof T]>
+type MachineHandler<T> = {
+  [State in MachineState<T>]: () => void
+} & { default?: (state: MachineState<T>) => void }
+
+export const createMachine = <S extends string, M extends Machine<S>>(
+  initialState: MachineState<M>,
+  machine: M,
+  handlers: MachineHandler<M>
+) => {
+  const current = { state: initialState }
+
+  const reduce = (state: MachineState<M>, event: MachineEvent<M>): MachineState<M> => {
+    const next = (machine[state] as any)[event]
+    return next ?? initialState
+  }
+
+  const send = (event: MachineEvent<M>) => {
+    const next = reduce(current.state, event)
+    const handler = handlers[next]
+    const defaultHandler = handlers.default
+    current.state = next
+    handler?.()
+    defaultHandler?.(next)
+  }
+
+  return { current, send }
+}
+```
+
+其实去掉类型标注后的核心逻辑也并不复杂，但为了实现一个比较准确的类型看上去会比较吓人。但实际上这段代码的类型写得也并不完美，还是不得已用到了一次 `as any` 的断言，希望能有更好的方案。
+
+使用其构建状态机如下：
+
+```typescript
+createMachine(
+  initialState,
+  {
+    open: {
+      CLOSE: "closed",
+      ANIMATION_OUT: "animated"
+    },
+    animating: {
+      OPEN: "open",
+      ANIMATION_END: "closed"
+    },
+    closed: {
+      OPEN: "open"
+    }
+  },
+  handlers
+)
+```
+
+这里我更改了一下几个状态和事件的名称，显得对当前的场景更加合理一点。
+
+当状态机的状态发生变化时，如果状态变成了 `open` 则将当前的入场动画名保存起来，否则设为 `none`。
+
+```typescript
+const currentAnimationName = getAnimationName(styles)
+previousAnimationName = state === "open" ? currentAnimationName : "none"
+```
+
+当状态机的状态变为 `open` 或 `animating` 时，我们需要将元素显示出来，这里我们使用 [`hidden`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/hidden) 属性来控制元素的显示和隐藏。
+
+```typescript
+node.hidden = false
+```
+
+在控制打开和关闭操作时，我们使用 `previousPresent` 记录该次操作后的状态。
+
+在控制打开操作时，首先检测是否已经处于打开的的状态，如果没有则向状态机发送 `OPEN` 事件。
+
+```typescript
+const open = () => {
+  if (previousPresent) return
+
+  machine.send("OPEN")
+
+  previousPresent = true
+}
+```
+
+在控制关闭时，首先我们需要监听一系列动画事件。
+
+在退场动画开始时，保存当前动画的名称。在退场动画结束时，向状态机发送 `ANIMATION_END` 事件。这里需要注意判断事件是否来自当前元素节点本身。
+
+```typescript
+const handleAnimationStart = (event: AnimationEvent) => {
+  if (event.target === node) {
+    previousAnimationName = getAnimationName(styles)
+  }
+}
+
+const handleAnimationEnd = (event: AnimationEvent) => {
+  const currentAnimationName = getAnimationName(styles)
+  const isCurrentAnimation = currentAnimationName.includes(event.animationName)
+
+  if (event.target === node && isCurrentAnimation) {
+    machine.send("ANIMATION_END")
+  }
+}
+```
+
+在控制关闭操作时，首先检测是否已经处于关闭的状态，如果没有则首先添加上述动画事件的监听器，然后判断当前是否正在有动画发生，如果有的话则向状态机发送 `ANIMATION_OUT` 事件，否则直接发送 `CLOSE` 事件。
+
+```typescript
+const close = () => {
+  if (!previousPresent) return
+
+  addEventListeners()
+
+  const currentAnimationName = getAnimationName(styles)
+  const isAnimating = previousAnimationName !== currentAnimationName
+
+  if (previousPresent && isAnimating) {
+    machine.send("ANIMATION_OUT")
+  } else {
+    machine.send("CLOSE")
+  }
+
+  previousPresent = false
+}
+```
+
+当状态机的状态变为 `closed` 时，我们需要将元素隐藏并且移除所有事件监听器。
+
+```typescript
+node.hidden = false
+removeEventListeners()
+```
+
+上述完整的代码实例可以在 [vanilla-presence](https://github.com/TunkShif/vanilla-presence) 这个 Repo 中找到，其中还包含了一个使用 Custom Element 构建的 Dialog 组件的例子。
+
+## 未来的解决方案
+
+Chrome 116 & 117 这两个版本引入了一系列新的 CSS 特性，使得 `display` 属性能够被 transition。后续如果各大浏览器厂商都能跟进这一特性，再配合 `<dialog>` 和 `<popover>` 这两个元素，组件库的开发者估计能轻松很多。
+
+详细信息参见 [_Four new CSS features for smooth entry and exit animations_](https://developer.chrome.com/blog/entry-exit-animations/#conclusion)。
+
+## 用状态机构建组件
+
+如果你对上述通过状态机描述构建组件的的方式很感兴趣的话，推荐进一步了解一下 [Zag](https://zagjs.com/) 这个项目。Zag 将一系列常见组件的逻辑抽象成了状态机，能够提供给任何 UI 框架使用。

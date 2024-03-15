@@ -1,0 +1,57 @@
+{
+  "name": "Tristan",
+  "intro": "web developer / language enthusiast\ndedicated to building great things on the web platform for better life",
+  "titleSuffix": "Tristan Yang (@TunkShif)",
+  "navigations": [
+    {
+      "name": {
+        "name": "Home",
+        "slug": "home"
+      },
+      "route": "/",
+      "icon": "hero-home"
+    },
+    {
+      "name": {
+        "name": "Posts",
+        "slug": "posts"
+      },
+      "route": "/posts",
+      "icon": "hero-archive-box"
+    },
+    {
+      "name": {
+        "name": "Journals",
+        "slug": "journals"
+      },
+      "route": "/journals",
+      "icon": "hero-pencil-square"
+    },
+    {
+      "name": {
+        "name": "Projects",
+        "slug": "projects"
+      },
+      "route": "/projects",
+      "icon": "hero-cube"
+    }
+  ],
+  "sicialLinks": [
+    {
+      "name": {
+        "name": "GitHub",
+        "slug": "github"
+      },
+      "icon": "social-github",
+      "url": "https://github.com/TunkShif"
+    },
+    {
+      "name": {
+        "name": "Twitter",
+        "slug": "twitter"
+      },
+      "icon": "social-twitter",
+      "url": "https://twitter.com/TunkShif"
+    }
+  ]
+}

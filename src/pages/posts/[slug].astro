@@ -1,12 +1,15 @@
 ---
-import RootLayout from "@/layouts/root.astro"
-import { Posts } from "@/libs/contents"
-import { format } from "date-fns"
+import { omit } from "radash"
+import invariant from "tiny-invariant"
+import { ArticleView } from "~/components/layout/article-view"
+import PostsLayout from "~/layouts/posts-layout.astro"
+import { Posts } from "~/libs/collections"
+import "~/styles/prose.css"
 
 const { slug } = Astro.params
-if (!slug) throw new Error("Slug not found")
 
-const post = await Posts.find(slug)
+const post = await Posts.bySlug(slug)
+invariant(post, `Missing post with slug "${slug}"`)
 
 const { Content } = await post.render()
 
@@ -16,22 +19,8 @@ export async function getStaticPaths() {
 }
 ---
 
-<RootLayout>
-  <title slot="head">
-    {`${post.data.title} | tunkshif.one`}
-  </title>
-
-  <div class="mb-2 font-light">
-    <div class="inline-block after:content-['/'] after:mx-1">
-      #{post.data.category}
-    </div>
-    <time datetime={post.data.created.toISOString()}>
-      {format(post.data.created, "MMM dd, yyyy")}
-    </time>
-  </div>
-
-  <h1 class="text-2xl font-semibold text-slate-800 dark:text-white">{post.data.title}</h1>
-  <div class="article prose mx-auto max-w-3xl dark:prose-invert">
+<PostsLayout title={post.data.title} isArticleView>
+  <ArticleView post={omit(post, ["body"])} back="/posts" client:load>
     <Content />
-  </div>
-</RootLayout>
+  </ArticleView>
+</PostsLayout>

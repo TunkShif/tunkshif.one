@@ -1,50 +1,36 @@
 ---
-import RootLayout from "@/layouts/root.astro"
-import Hero from "./_hero.astro"
-import { Posts } from "@/libs/contents"
-import { format } from "date-fns"
-
-const posts = await Posts.recent()
+import { Box, Grid, HStack, Stack } from "styled-system/jsx"
+import { SplashedText } from "~/components/common/splashed-text"
+import { SideBarToggleButton } from "~/components/layout/side-bar"
+import { Heading } from "~/components/ui/heading"
+import { Text } from "~/components/ui/text"
+import MainLayout from "~/layouts/main-layout.astro"
+import settings from "~/settings.json"
 ---
 
-<RootLayout>
-  <title slot="head">tunkshif.one</title>
+<MainLayout>
+  <Box w="full">
+    <HStack px="2" lg={{ px: "4" }} minH="12">
+      <SideBarToggleButton client:media="(max-width: 64rem)" transition:persist />
+    </HStack>
 
-  <Hero />
-
-  <section class="py-2">
-    <div class="mb-4 flex justify-between items-center">
-      <h2 class="text-primary text-xl md:text-2xl font-semibold">
-        <a
-          class="underline decoration-transparent hover:decoration-current transition-colors duration-300 ease-in-out"
-          href="/posts"
-          data-astro-prefetch
-        >
-          Recent Posts</a
-        >
-      </h2>
-    </div>
-
-    <ul class="space-y-2">
-      {
-        posts.map((post) => (
-          <li class="flex flex-col md:flex-row justify-between gap-1">
-            <a
-              class="underline text-primary text-sm md:text-base decoration-transparent hover:decoration-current font-medium transition-colors duration-300 ease-in-out"
-              href={`/posts/${post.slug}`}
-              data-astro-prefetch
-            >
-              {post.data.title}
-            </a>
-            <time
-              class="shrink-0 text-xs md:text-sm tabular-nums"
-              datetime={post.data.created.toISOString()}
-            >
-              {format(post.data.created, "yyyy-MM-dd")}
-            </time>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
-</RootLayout>
+    <Box mx="auto" w="full" maxW="3xl" px="8" py="12">
+      <Grid columns={1} lg={{ gridTemplateColumns: 12 }} gap="4">
+        <Heading gridColumn="span 2" as="h2">
+          <Text srOnly>Intro</Text>
+        </Heading>
+        <Stack gridColumn="span 10" gap="4">
+          <Heading size="5xl" fontWeight="extrabold" as="h1">
+            <Text>Hello,</Text>
+            <Text>
+              I'm <SplashedText as="span">{settings.name}</SplashedText>
+            </Text>
+          </Heading>
+          <Stack gap="0.5">
+            {settings.intro.split("\n").map((text) => <Text size="lg">{text}</Text>)}
+          </Stack>
+        </Stack>
+      </Grid>
+    </Box>
+  </Box>
+</MainLayout>

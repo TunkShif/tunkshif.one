@@ -1,14 +1,27 @@
-import markdoc from "@astrojs/markdoc"
+import cloudflare from "@astrojs/cloudflare"
+import mdx from "@astrojs/mdx"
 import react from "@astrojs/react"
-import tailwind from "@astrojs/tailwind"
-import vercel from "@astrojs/vercel/serverless"
 import keystatic from "@keystatic/astro"
 import { defineConfig } from "astro/config"
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react(), markdoc(), keystatic(), tailwind()],
+  integrations: [react(), mdx(), keystatic()],
   output: "hybrid",
-  adapter: vercel(),
-  prefetch: true
+  prefetch: true,
+  markdown: {
+    shikiConfig: {
+      themes: {
+        light: "catppuccin-macchiato",
+        dark: "catppuccin-mocha"
+      }
+    }
+  },
+  adapter: cloudflare({
+    mode: "directory",
+    runtime: {
+      mode: "local",
+      type: "pages"
+    }
+  })
 })

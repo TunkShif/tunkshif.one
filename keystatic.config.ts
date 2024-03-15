@@ -1,97 +1,103 @@
-import { playground } from "@/components/blocks/playground"
-import { collection, config, fields } from "@keystatic/core"
+import { collection, config, fields, singleton } from "@keystatic/core"
 
-const isDev = process.env.NODE_ENV === "development"
+const storage = import.meta.env.DEV
+  ? { kind: "local" as const }
+  : {
+      kind: "github" as const,
+      repo: {
+        owner: "TunkShif",
+        name: "tunkshif.one"
+      }
+    }
 
-const localStorageProvider = { kind: "local" } as const
-const githubStorageProvider = {
-  kind: "github",
-  repo: {
-    owner: "TunkShif",
-    name: "tunkshif.one"
-  }
-} as const
-const storage = isDev ? localStorageProvider : githubStorageProvider
-
-const components = {
-  playground
-}
-
-const posts = collection({
-  label: "Posts",
-  slugField: "title",
-  path: "src/content/posts/*",
-  entryLayout: "content",
-  format: { contentField: "content" },
+const settings = singleton({
+  label: "Settings",
+  path: "src/settings",
+  format: "json",
   schema: {
-    title: fields.slug({ name: { label: "Title" } }),
-    draft: fields.checkbox({ label: "Draft", defaultValue: true }),
-    created: fields.date({ label: "Created", defaultValue: { kind: "today" } }),
-    category: fields.text({ label: "Category" }),
-    content: fields.document({
-      label: "Content",
-      formatting: true,
-      dividers: true,
-      links: true,
-      images: {
-        directory: "src/assets/images/posts",
-        publicPath: "../../assets/images/posts/"
-      },
-      tables: true,
-      componentBlocks: components
-    })
-  }
-})
-
-const series = collection({
-  label: "Series",
-  slugField: "title",
-  path: "src/content/series/*",
-  schema: {
-    title: fields.slug({ name: { label: "Title" } }),
-    posts: fields.array(
-      fields.relationship({
-        label: "Post",
-        collection: "posts",
-        validation: {
-          isRequired: true
-        }
+    name: fields.text({ label: "Display Name", validation: { isRequired: true } }),
+    intro: fields.text({ label: "Introduction", multiline: true }),
+    titleSuffix: fields.text({ label: "Site Tittle Suffix", validation: { isRequired: true } }),
+    navigations: fields.array(
+      fields.object({
+        name: fields.slug({ name: { label: "Name" } }),
+        route: fields.text({ label: "Route", validation: { isRequired: true } }),
+        icon: fields.text({ label: "Icon", validation: { isRequired: true } })
       }),
       {
-        label: "Posts",
-        itemLabel: (props) => props.value ?? "Please select a post"
+        label: "Navigations",
+        itemLabel: (item) => `${item.fields.name.value.name} (${item.fields.route.value})`
+      }
+    ),
+    sicialLinks: fields.array(
+      fields.object({
+        name: fields.slug({ name: { label: "Name" } }),
+        icon: fields.text({ label: "Icon", validation: { isRequired: true } }),
+        url: fields.url({ label: "Link", validation: { isRequired: true } })
+      }),
+      {
+        label: "Social Links",
+        itemLabel: (item) => item.fields.name.value.name
       }
     )
   }
 })
 
-const iconOptions = ["react", "elixir", "typescript", "html", "css", "kotlin", "zig", "python", "c"]
-  .sort()
-  .map((value) => ({
-    label: value,
-    value
-  }))
-
-const projects = collection({
-  label: "Projects",
+const posts = collection({
+  label: "Posts",
   slugField: "title",
-  path: "src/content/projects/*",
+  path: "src/content/posts/*",
+  columns: ["draft", "category", "created"],
+  entryLayout: "content",
+  format: {
+    contentField: "content"
+  },
   schema: {
     title: fields.slug({ name: { label: "Title" } }),
-    description: fields.text({ label: "Description", multiline: true }),
-    icons: fields.multiselect({ label: "Icons", options: iconOptions }),
-    website: fields.url({ label: "Website URL" }),
-    github: fields.url({ label: "GitHub URL" }),
-    pinned: fields.checkbox({ label: "Pinned", defaultValue: false }),
-    created: fields.date({ label: "Created", defaultValue: { kind: "today" } })
+    draft: fields.checkbox({ label: "Draft", defaultValue: true }),
+    summary: fields.text({ label: "Summary", multiline: true }),
+    language: fields.select({
+      label: "Language",
+      options: [
+        { label: "中文", value: "zh" },
+        { label: "English", value: "en" }
+      ],
+      defaultValue: "zh"
+    }),
+    created: fields.date({
+      label: "Created",
+      defaultValue: { kind: "today" }
+    }),
+    category: fields.select({
+      label: "Category",
+      options: [
+        { label: "Dev", value: "Dev" },
+        { label: "Life", value: "Life" }
+      ],
+      defaultValue: "Dev"
+    }),
+    topics: fields.array(fields.text({ label: "Topic" }), {
+      label: "Topics",
+      itemLabel: (item) => item.value
+    }),
+    content: fields.mdx({
+      label: "Content",
+      options: {
+        image: {
+          directory: "src/assets/images/posts",
+          publicPath: "../../assets/images/posts/"
+        }
+      }
+    })
   }
 })
 
 export default config({
   storage,
+  singletons: {
+    settings
+  },
   collections: {
-    posts,
-    series,
-    projects
+    posts
   }
 })

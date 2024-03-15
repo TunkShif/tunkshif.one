@@ -7,5 +7,6 @@ module.exports = {
   semi: false,
   useTabs: false,
   singleQuote: false,
-  trailingComma: "none"
-};
+  trailingComma: "none",
+  plugins: ["prettier-plugin-astro", "@trivago/prettier-plugin-sort-imports"]
+}

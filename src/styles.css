@@ -1,0 +1,8 @@
+@layer reset, base, tokens, recipes, utilities;
+
+:root {
+  --font-fig-tree: "Figtree Variable";
+  --font-dm-mono: "DM Mono";
+  --global-font-body: var(--font-fig-tree);
+  --global-font-mono: var(--font-dm-mono);
+}

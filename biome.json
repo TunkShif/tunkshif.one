@@ -1,0 +1,24 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.6.0/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "formatter": {
+    "enabled": false
+  },
+  "linter": {
+    "enabled": true,
+    "ignore": [
+      "./src/components/ui/*.tsx",
+      "./src/libs/create-style-context.tsx"
+    ],
+    "rules": {
+      "recommended": true
+    }
+  }
+}

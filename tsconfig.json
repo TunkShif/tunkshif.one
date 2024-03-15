@@ -4,9 +4,13 @@
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "baseUrl": ".",
+    "include": [
+      "src",
+      "styled-system"
+    ],
     "paths": {
-      "@/*": [
-        "./src/*"
+      "~/*": [
+        "src/*"
       ]
     }
   }

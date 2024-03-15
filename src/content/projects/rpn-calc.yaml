@@ -1,7 +1,0 @@
-title: RPN Calc
-description: Simple math expression evaluator written in C.
-icons:
-  - c
-github: https://github.com/TunkShif/RPN-Calc
-pinned: false
-created: '2020-12-29'
