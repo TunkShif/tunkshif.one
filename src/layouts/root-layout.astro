@@ -32,7 +32,6 @@ const siteTitle = title ? `${title} - ${titleSuffix}` : titleSuffix
         const theme =
           localStorage.getItem("theme") ??
           (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-        console.log(theme)
         const isDark = theme === "dark"
         document.documentElement.classList[isDark ? "add" : "remove"]("dark")
       })()

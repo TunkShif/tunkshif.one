@@ -64,6 +64,7 @@ export const PostList = ({
           {initialPosts.map((post) => (
             <li key={post.slug}>
               <a
+                data-astro-prefetch
                 href={`/posts/${post.slug}`}
                 aria-current={
                   isActiveRoute(currenRoute, `/posts/${post.slug}`) ? "page" : undefined

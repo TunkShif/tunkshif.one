@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@ark-ui/react": "^2.2.3",
+    "@astrojs/cloudflare": "^9.1.0",
     "@astrojs/mdx": "^2.2.0",
     "@astrojs/react": "^3.1.0",
     "@fontsource-variable/figtree": "^5.0.20",

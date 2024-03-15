@@ -114,6 +114,7 @@ export const SideBar = ({ initialRoute }: { initialRoute: string }) => {
                   <a
                     className={nav}
                     href={route}
+                    data-astro-prefetch
                     aria-current={isActiveRoute(currentRoute, route) ? "page" : undefined}
                   >
                     <PresetIcon name={icon} size="sm" transition="colors 200ms ease-in-out" />
