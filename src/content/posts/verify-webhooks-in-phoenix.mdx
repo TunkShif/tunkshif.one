@@ -9,6 +9,7 @@ topics:
   - phoenix
   - webhook
 ---
+
 ## 问题背景
 
 在使用 Webhook 时，一般都会对传入的的请求进行某种方式的的校验。常见的校验方式为将传入的请求的请求体结合一个密钥通过 [HMAC](https://en.wikipedia.org/wiki/HMAC) 生成一个哈希值连带着请求传入，因此在服务端这边需要获取到原始请求体的值。
@@ -107,6 +108,6 @@ end
 
 上述代码实现参考自下列内容：
 
-* [https://github.com/phoenixframework/phoenix/issues/459#issuecomment-862203762](https://github.com/phoenixframework/phoenix/issues/459#issuecomment-862203762)
+- [https://github.com/phoenixframework/phoenix/issues/459#issuecomment-862203762](https://github.com/phoenixframework/phoenix/issues/459#issuecomment-862203762)
 
-* [https://dashbit.co/blog/how-we-verify-webhooks](https://dashbit.co/blog/how-we-verify-webhooks)
+- [https://dashbit.co/blog/how-we-verify-webhooks](https://dashbit.co/blog/how-we-verify-webhooks)

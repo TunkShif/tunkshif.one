@@ -1,40 +1,26 @@
 ---
+import { omit } from "radash"
+import invariant from "tiny-invariant"
+import { ArticleView } from "~/components/layout/article-view"
 import PostsLayout from "~/layouts/posts-layout.astro"
-import { Heading } from "~/components/ui/heading"
-import { getEntry, getCollection } from "astro:content"
-import { Box, Stack } from "styled-system/jsx"
-import { prose } from "styled-system/recipes"
-import { cx, css } from "styled-system/css"
+import { Posts, type Post } from "~/libs/collections"
 import "~/styles/prose.css"
 
 const { slug } = Astro.params
 
-const post = await getEntry("posts", slug)
+const post = await Posts.bySlug(slug)
+invariant(post, `Missing post with slug "${slug}"`)
 
 const { Content } = await post.render()
 
 export async function getStaticPaths() {
-  const posts = await getCollection("posts")
+  const posts = await Posts.all()
   return posts.map((post) => ({ params: { slug: post.slug } }))
 }
 ---
 
 <PostsLayout title={post.data.title} isArticleView>
-  <Stack bg="bg.canvas" w="full" overflowY="auto" maxH="screen">
-    <Box position="sticky" top="0" insetX="0">
-      <Box h="12">header</Box>
-    </Box>
-
-    <Box mx="auto" w="full" px="6" maxW="3xl">
-      <Stack>
-        <Heading>
-          {post.data.title}
-        </Heading>
-      </Stack>
-
-      <article class={prose()}>
-        <Content />
-      </article>
-    </Box>
-  </Stack>
+  <ArticleView post={omit(post, ["body"])} back="/posts" client:load>
+    <Content />
+  </ArticleView>
 </PostsLayout>

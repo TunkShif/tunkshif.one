@@ -9,17 +9,18 @@ topics:
   - parser
   - typescript
 ---
+
 Pratt Parsing 是一种便于解析表达式的 Parsing 算法，尤其擅长处理表达式中运算符优先级和结合性的问题。在 [Crafting Interpreters](https://craftinginterpreters.com/compiling-expressions.html#a-pratt-parser) 这本书中，作者详细介绍了如何用 C 语言实现能够解析 Lox 语言的 Pratt Parser。
 
 在我写下这篇文章之前已经有很多写得很不错的文章介绍 Pratt Parsing 了，首先推荐阅读下列文章：
 
-* [Pratt Parsers: Expression Parsing Made Easy](https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/)
+- [Pratt Parsers: Expression Parsing Made Easy](https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/)
 
-* [On Recursive Descent and Pratt Parsing](https://chidiwilliams.com/post/on-recursive-descent-and-pratt-parsing/)
+- [On Recursive Descent and Pratt Parsing](https://chidiwilliams.com/post/on-recursive-descent-and-pratt-parsing/)
 
-* [Simple but Powerful Pratt Parsing](https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html)
+- [Simple but Powerful Pratt Parsing](https://matklad.github.io/2020/04/13/simple-but-powerful-pratt-parsing.html)
 
-* [手写一个Parser - 代码简单而功能强大的Pratt Parsing](https://zhuanlan.zhihu.com/p/471075848)
+- [手写一个Parser - 代码简单而功能强大的Pratt Parsing](https://zhuanlan.zhihu.com/p/471075848)
 
 假如我们现在有以下语法描述的一门语言，能够产生诸如 `1 + 2 - 3 * 4 / 5` 或 `-f(a + b, a - b)` 的简单数学表达式。
 
@@ -34,39 +35,39 @@ arguments  = expression ( "," expression )* ;
 
 如果我们要手工实现 Parser 来解析上述表达式，其中运算符的优先级和结合性是需要我们解决的问题。
 
-* 优先级（Precedence）：例如 `*` 和 `/` 的优先级高于 `+` 和 `-`，即 `1+2*3` 应该被解析为`1 + (2 * 3)`。
+- 优先级（Precedence）：例如 `*` 和 `/` 的优先级高于 `+` 和 `-`，即 `1+2*3` 应该被解析为`1 + (2 * 3)`。
 
-* 结合性（Associativity）：例如 `/` 是左结合的运算符，即 `1/2/3` 应该被解析为 `((1 / 2) / 3)`而不是`(1 / (2 / 3))`。
+- 结合性（Associativity）：例如 `/` 是左结合的运算符，即 `1/2/3` 应该被解析为 `((1 / 2) / 3)`而不是`(1 / (2 / 3))`。
 
 ## 算法流程
 
 在 Pratt Parsing 算法中，token 被分为 prefix 和 infix 两类，其核心算法流程是：
 
-* 要解析一个表达式首先读取一个 token 作为 prefix，这个 prefix 是用来构建一个表达式的最起始的 token，例如 `1 + 2` 当中的 `1`，`-(a+b)` 中的 `-` 和 `foo()` 当中的 `foo`。
+- 要解析一个表达式首先读取一个 token 作为 prefix，这个 prefix 是用来构建一个表达式的最起始的 token，例如 `1 + 2` 当中的 `1`，`-(a+b)` 中的 `-` 和 `foo()` 当中的 `foo`。
 
-* 而 infix 则是在构建表达式的过程中必须知道其左侧节点的 token，例如 `1 + 2` 中的 `+` 或者 `foo()` 中的 `(` 。要获取 infix 右侧的表达式，我们需要指定一个优先级递归的去解析右侧的子表达式。
+- 而 infix 则是在构建表达式的过程中必须知道其左侧节点的 token，例如 `1 + 2` 中的 `+` 或者 `foo()` 中的 `(` 。要获取 infix 右侧的表达式，我们需要指定一个优先级递归的去解析右侧的子表达式。
 
 例如根据上述算法解析 `-1 + 2 * 3` 这个表达式：
 
-* 以最小的运算符优先级 `TERM` 开始解析
+- 以最小的运算符优先级 `TERM` 开始解析
 
-* 读取 token `-` 作为 prefix，匹配到 unary 规则，要获取到操作数，则需要以 `UNARY` 优先级递归解析子表达式
+- 读取 token `-` 作为 prefix，匹配到 unary 规则，要获取到操作数，则需要以 `UNARY` 优先级递归解析子表达式
 
-  * 读取 token `1` 作为 prefix，下一个 token `+` 对应的优先级 `TERM` 小于当前优先级 `UNARY`，则递归终止
+  - 读取 token `1` 作为 prefix，下一个 token `+` 对应的优先级 `TERM` 小于当前优先级 `UNARY`，则递归终止
 
-  * 返回 `(- 1)` 作为表达式左侧节点
+  - 返回 `(- 1)` 作为表达式左侧节点
 
-* 读取 token `+` 作为 infix，匹配到 binary 规则，要获取到右侧节点，则继续以 `TERM` 优先级递归解析子表达式
+- 读取 token `+` 作为 infix，匹配到 binary 规则，要获取到右侧节点，则继续以 `TERM` 优先级递归解析子表达式
 
-  * 读取 token `2` 作为 prefix，下一个 token `*` 对应的优先级 `FACTOR` 大于当前优先级 `TERM`，则将 `2` 作为表达式左侧节点
+  - 读取 token `2` 作为 prefix，下一个 token `*` 对应的优先级 `FACTOR` 大于当前优先级 `TERM`，则将 `2` 作为表达式左侧节点
 
-  * 读取 token `*` 作为 infix，匹配到 binary 规则，要获取右侧节点，则继续以 `FACTOR` 优先级递归解析子表达式
+  - 读取 token `*` 作为 infix，匹配到 binary 规则，要获取右侧节点，则继续以 `FACTOR` 优先级递归解析子表达式
 
-    * 读取 token `3` 作为 prefix，后续再无更多 token，则返回 `3` 作为右侧节点
+    - 读取 token `3` 作为 prefix，后续再无更多 token，则返回 `3` 作为右侧节点
 
-  * 返回 `(2 * 3)` 作为表达式右侧节点
+  - 返回 `(2 * 3)` 作为表达式右侧节点
 
-* 获得完整表达式 `(-1) + (2 * 3)`
+- 获得完整表达式 `(-1) + (2 * 3)`
 
 ## 代码实现
 

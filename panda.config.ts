@@ -28,25 +28,25 @@ export default defineConfig({
         colors: {
           prose: {
             body: {
-              value: "{colors.slate.12}"
+              value: "{colors.fg.default/85}"
             },
             heading: {
-              value: "{colors.slate.12}"
+              value: "{colors.fg.default}"
             },
             lead: {
-              value: "{colors.slate.12}"
+              value: "{colors.fg.default}"
             },
             link: {
-              value: "{colors.indigo.11}"
+              value: "{colors.accent.text}"
             },
             bold: {
-              value: "{colors.slate.12}"
+              value: "{colors.fg.default}"
             },
             counter: {
               value: "{colors.slate.11}"
             },
             bullet: {
-              value: "{colors.slate.11}"
+              value: "{colors.accent.12}"
             },
             hrBorder: {
               value: "{colors.slate.6}"
@@ -67,7 +67,7 @@ export default defineConfig({
               value: "0 0 0"
             },
             code: {
-              value: "{colors.slate.11}"
+              value: "{colors.fg.default}"
             },
             preCode: {
               value: "{colors.slate.12}"
@@ -76,10 +76,10 @@ export default defineConfig({
               value: "{colors.slate.2}"
             },
             thBorder: {
-              value: "{colors.slate.6}"
+              value: "{colors.border.subtle}"
             },
             tdBorder: {
-              value: "{colors.slate.6}"
+              value: "{colors.border.subtle}"
             }
           }
         }

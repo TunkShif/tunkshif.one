@@ -6,5 +6,13 @@ import { defineConfig } from "astro/config"
 // https://astro.build/config
 export default defineConfig({
   integrations: [react(), mdx(), keystatic()],
-  output: "hybrid"
+  output: "hybrid",
+  markdown: {
+    shikiConfig: {
+      themes: {
+        light: "catppuccin-macchiato",
+        dark: "catppuccin-mocha"
+      }
+    }
+  }
 })

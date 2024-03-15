@@ -14,7 +14,8 @@
   "linter": {
     "enabled": true,
     "ignore": [
-      "./src/components/ui/*.tsx"
+      "./src/components/ui/*.tsx",
+      "./src/libs/create-style-context.tsx"
     ],
     "rules": {
       "recommended": true

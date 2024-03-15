@@ -1,3 +1,38 @@
 .prose {
   max-width: none;
 }
+
+.prose li p {
+  margin: 0;
+}
+
+.prose :where(h2, h3) {
+  margin-top: 0;
+}
+
+.prose code:not(pre code) {
+  font-weight: var(--font-weights-medium);
+  padding-inline: var(--sizes-1);
+  background: var(--colors-bg-subtle);
+  border-width: 1px;
+  border-radius: var(--radii-sm);
+}
+
+.prose code::before,
+.prose code::after {
+  content: none;
+}
+
+.prose pre code {
+  font-size: var(--font-sizes-sm);
+}
+
+.prose img {
+  border-radius: var(--radii-md);
+}
+
+html.dark .astro-code-themes,
+html.dark .astro-code-themes span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}

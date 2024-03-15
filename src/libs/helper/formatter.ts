@@ -1,4 +1,4 @@
 import { intlFormat } from "date-fns"
 
-export const format = (date: Date, locale = "en-US") =>
+export const toIntlFormatDate = (date: Date, locale = "en-US") =>
   intlFormat(date, { year: "numeric", month: "short", day: "numeric" }, { locale })

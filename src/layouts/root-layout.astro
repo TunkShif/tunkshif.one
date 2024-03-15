@@ -1,8 +1,9 @@
 ---
-import settings from "~/settings.json"
 import { ViewTransitions } from "astro:transitions"
 import "@fontsource-variable/figtree"
-import "@fontsource/dm-mono"
+import "@fontsource/dm-mono/400.css"
+import "@fontsource/dm-mono/500.css"
+import settings from "~/settings.json"
 import "~/styles.css"
 
 export interface Props {
@@ -25,7 +26,19 @@ const siteTitle = title ? `${title} - ${titleSuffix}` : titleSuffix
     <meta name="generator" content={Astro.generator} />
     <title>{siteTitle}</title>
     <ViewTransitions />
+
+    <script is:inline data-astro-rerun>
+      ;(() => {
+        const theme =
+          localStorage.getItem("theme") ??
+          (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+        console.log(theme)
+        const isDark = theme === "dark"
+        document.documentElement.classList[isDark ? "add" : "remove"]("dark")
+      })()
+    </script>
   </head>
+
   <body>
     <slot />
   </body>

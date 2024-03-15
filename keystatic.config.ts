@@ -17,6 +17,8 @@ const settings = singleton({
   path: "src/settings",
   format: "json",
   schema: {
+    name: fields.text({ label: "Display Name", validation: { isRequired: true } }),
+    intro: fields.text({ label: "Introduction", multiline: true }),
     titleSuffix: fields.text({ label: "Site Tittle Suffix", validation: { isRequired: true } }),
     navigations: fields.array(
       fields.object({
@@ -27,6 +29,17 @@ const settings = singleton({
       {
         label: "Navigations",
         itemLabel: (item) => `${item.fields.name.value.name} (${item.fields.route.value})`
+      }
+    ),
+    sicialLinks: fields.array(
+      fields.object({
+        name: fields.slug({ name: { label: "Name" } }),
+        icon: fields.text({ label: "Icon", validation: { isRequired: true } }),
+        url: fields.url({ label: "Link", validation: { isRequired: true } })
+      }),
+      {
+        label: "Social Links",
+        itemLabel: (item) => item.fields.name.value.name
       }
     )
   }

@@ -8,27 +8,28 @@ category: Dev
 topics:
   - front-end
 ---
+
 给 HTML 元素增加显隐状态的过渡动画效果是一个很常见的需求，但在通过纯 CSS 的 transition 或 animation 方案实现起来时总会存在一些麻烦的问题：
 
-* CSS 的 transition 和 animation 无法作用于 `display` 属性，使用该属性来隐藏元素时的退场动画效果不会显示。
+- CSS 的 transition 和 animation 无法作用于 `display` 属性，使用该属性来隐藏元素时的退场动画效果不会显示。
 
-* 在使用 React 或 Vue 等框架的时候，组件在卸载时对应的 DOM 元素也会被移除，导致退场动画来不及触发元素已经被移除。
+- 在使用 React 或 Vue 等框架的时候，组件在卸载时对应的 DOM 元素也会被移除，导致退场动画来不及触发元素已经被移除。
 
 而目前已经存在的解决方案主要包括：
 
-* 使用 `opacity: 0` 或 `visibility: hidden` 等比较 tricky 的手段来实现隐藏元素，但这种方法存在影响文档布局以及无障碍相关的问题，因此并**不推荐**该方法。这类方法常见于 StackOverflow 中“*为什么我的动画效果对*`display: none`*不起作用的相关问题*“回答下。
+- 使用 `opacity: 0` 或 `visibility: hidden` 等比较 tricky 的手段来实现隐藏元素，但这种方法存在影响文档布局以及无障碍相关的问题，因此并**不推荐**该方法。这类方法常见于 StackOverflow 中“_为什么我的动画效果对_`display: none`_不起作用的相关问题_“回答下。
 
-* 监听 [`transitionend`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionend_event) 或 [`animationend`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationend_event) 相关的事件，在确保过渡动画结束后再将元素隐藏或移除。当然有些地方也会获取到动画时间，然后使用 `setTimeout` 的回调去实现。这是比较常见的解决方案，例如下面这些库：
+- 监听 [`transitionend`](https://developer.mozilla.org/en-US/docs/Web/API/Element/transitionend_event) 或 [`animationend`](https://developer.mozilla.org/en-US/docs/Web/API/Element/animationend_event) 相关的事件，在确保过渡动画结束后再将元素隐藏或移除。当然有些地方也会获取到动画时间，然后使用 `setTimeout` 的回调去实现。这是比较常见的解决方案，例如下面这些库：
 
-  * [Bootstrap](https://github.com/twbs/bootstrap/blob/f7426c08e7818ff3eb77f7c7cde54ca6d28009b2/js/src/util/index.js#L229)：监听 `transitionend` 事件
+  - [Bootstrap](https://github.com/twbs/bootstrap/blob/f7426c08e7818ff3eb77f7c7cde54ca6d28009b2/js/src/util/index.js#L229)：监听 `transitionend` 事件
 
-  * [Headless UI](https://github.com/tailwindlabs/headlessui/blob/76dd10ea554fa1d05576be2090612a3c3b04f9cb/packages/%40headlessui-react/src/components/transitions/utils/transition.ts#L13) 的 [Transition](https://headlessui.com/react/transition) 组件：监听 `transitionend` 事件
+  - [Headless UI](https://github.com/tailwindlabs/headlessui/blob/76dd10ea554fa1d05576be2090612a3c3b04f9cb/packages/%40headlessui-react/src/components/transitions/utils/transition.ts#L13) 的 [Transition](https://headlessui.com/react/transition) 组件：监听 `transitionend` 事件
 
-  * [Radix UI](https://github.com/radix-ui/primitives/blob/c31c97274ff357aea99afe6c01c1c8c58b6356e0/packages/react/presence/src/Presence.tsx#L100) 的 [Presence](https://github.com/radix-ui/primitives/blob/c31c97274ff357aea99afe6c01c1c8c58b6356e0/packages/react/presence/README.md) 组件：监听 `animationend` 事件
+  - [Radix UI](https://github.com/radix-ui/primitives/blob/c31c97274ff357aea99afe6c01c1c8c58b6356e0/packages/react/presence/src/Presence.tsx#L100) 的 [Presence](https://github.com/radix-ui/primitives/blob/c31c97274ff357aea99afe6c01c1c8c58b6356e0/packages/react/presence/README.md) 组件：监听 `animationend` 事件
 
-  * [Phoenix LiveView](https://github.com/phoenixframework/phoenix_live_view/blob/7acbc6b9761fa6a76eea44fa31aaac95d99e75d8/assets/js/phoenix_live_view/live_socket.js#L932) 的 [`JS.transition`](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.JS.html#transition/1) 指令：使用 `setTimeout` 实现
+  - [Phoenix LiveView](https://github.com/phoenixframework/phoenix_live_view/blob/7acbc6b9761fa6a76eea44fa31aaac95d99e75d8/assets/js/phoenix_live_view/live_socket.js#L932) 的 [`JS.transition`](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.JS.html#transition/1) 指令：使用 `setTimeout` 实现
 
-* 使用 [Framer Motion ](https://www.framer.com/motion/examples/#exit-animations)等更加复杂专业的动画库。
+- 使用 [Framer Motion ](https://www.framer.com/motion/examples/#exit-animations)等更加复杂专业的动画库。
 
 其中我觉得 Radix UI 的 Presence 组件的设计能够让使用者很方便的给元素添加退场动画，例如下面这个来自其官网的 [Animation Guide](https://www.radix-ui.com/primitives/docs/guides/animation) 中的例子：
 
@@ -51,13 +52,13 @@ topics:
   }
 }
 
-.DialogOverlay[data-state='open'],
-.DialogContent[data-state='open'] {
+.DialogOverlay[data-state="open"],
+.DialogContent[data-state="open"] {
   animation: fadeIn 300ms ease-out;
 }
 
-.DialogOverlay[data-state='closed'],
-.DialogContent[data-state='closed'] {
+.DialogOverlay[data-state="closed"],
+.DialogContent[data-state="closed"] {
   animation: fadeOut 300ms ease-in;
 }
 ```
@@ -70,11 +71,11 @@ topics:
 
 整个组件可以看作一个状态机，包含下列三种状态：
 
-* mounted：表示组件已经挂载
+- mounted：表示组件已经挂载
 
-* unmountSuspended：表示组件即将挂载，目前正在等待退场动画结束
+- unmountSuspended：表示组件即将挂载，目前正在等待退场动画结束
 
-* unmounted：组件已经挂载
+- unmounted：组件已经挂载
 
 因此当状态机处于 `unmounted` 状态时，表示组件应当卸载。
 
@@ -125,19 +126,23 @@ export const createMachine = <S extends string, M extends Machine<S>>(
 使用其构建状态机如下：
 
 ```typescript
-createMachine(initialState, {
-  open: {
-    CLOSE: "closed",
-    ANIMATION_OUT: "animated"
+createMachine(
+  initialState,
+  {
+    open: {
+      CLOSE: "closed",
+      ANIMATION_OUT: "animated"
+    },
+    animating: {
+      OPEN: "open",
+      ANIMATION_END: "closed"
+    },
+    closed: {
+      OPEN: "open"
+    }
   },
-  animating: {
-    OPEN: "open",
-    ANIMATION_END: "closed"
-  },
-  closed: {
-    OPEN: "open"
-  }
-}, handlers)
+  handlers
+)
 ```
 
 这里我更改了一下几个状态和事件的名称，显得对当前的场景更加合理一点。
@@ -176,16 +181,16 @@ const open = () => {
 ```typescript
 const handleAnimationStart = (event: AnimationEvent) => {
   if (event.target === node) {
-    previousAnimationName = getAnimationName(styles);
+    previousAnimationName = getAnimationName(styles)
   }
-};
+}
 
 const handleAnimationEnd = (event: AnimationEvent) => {
-  const currentAnimationName = getAnimationName(styles);
-  const isCurrentAnimation = currentAnimationName.includes(event.animationName);
+  const currentAnimationName = getAnimationName(styles)
+  const isCurrentAnimation = currentAnimationName.includes(event.animationName)
 
   if (event.target === node && isCurrentAnimation) {
-    machine.send("ANIMATION_END");
+    machine.send("ANIMATION_END")
   }
 }
 ```
@@ -224,7 +229,7 @@ removeEventListeners()
 
 Chrome 116 & 117 这两个版本引入了一系列新的 CSS 特性，使得 `display` 属性能够被 transition。后续如果各大浏览器厂商都能跟进这一特性，再配合 `<dialog>` 和 `<popover>` 这两个元素，组件库的开发者估计能轻松很多。
 
-详细信息参见 [*Four new CSS features for smooth entry and exit animations*](https://developer.chrome.com/blog/entry-exit-animations/#conclusion)。
+详细信息参见 [_Four new CSS features for smooth entry and exit animations_](https://developer.chrome.com/blog/entry-exit-animations/#conclusion)。
 
 ## 用状态机构建组件
 

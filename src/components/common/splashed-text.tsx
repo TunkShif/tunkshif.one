@@ -13,7 +13,7 @@ export const SplashedText = (props: TextProps) => (
       bottom: "0.5",
       insetX: "0",
       transform: "skewX(-12deg) skewY(-2deg)",
-      mixBlendMode: "darken",
+      mixBlendMode: "var(--mix-blend-mode, darken)",
       transition: "colors",
       transitionDuration: "normal",
       transitionTimingFunction: "ease-in-out"
@@ -24,14 +24,7 @@ export const SplashedText = (props: TextProps) => (
       }
     }}
     _dark={{
-      _after: {
-        mixBlendMode: "lighten"
-      }
-    }}
-    _osDark={{
-      _after: {
-        mixBlendMode: "lighten"
-      }
+      "--mix-blend-mode": "lighten"
     }}
     {...props}
   />

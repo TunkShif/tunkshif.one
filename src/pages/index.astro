@@ -1,18 +1,21 @@
 ---
-import { Box, Grid, Stack } from "styled-system/jsx"
-import { Text } from "~/components/ui/text"
-import { Heading } from "~/components/ui/heading"
+import { Box, Grid, HStack, Stack } from "styled-system/jsx"
 import { SplashedText } from "~/components/common/splashed-text"
+import { SideBarToggleButton } from "~/components/layout/side-bar"
+import { Heading } from "~/components/ui/heading"
+import { Text } from "~/components/ui/text"
 import MainLayout from "~/layouts/main-layout.astro"
+import settings from "~/settings.json"
 ---
 
 <MainLayout>
   <Box w="full">
-    <!-- top bar for mobile view-->
-    <Box minH="12" />
+    <HStack px="2" lg={{ px: "4" }} minH="12">
+      <SideBarToggleButton client:media="(max-width: 64rem)" transition:persist />
+    </HStack>
 
     <Box mx="auto" w="full" maxW="3xl" px="8" py="12">
-      <Grid columns={12} gap="4">
+      <Grid columns={1} lg={{ gridTemplateColumns: 12 }} gap="4">
         <Heading gridColumn="span 2" as="h2">
           <Text srOnly>Intro</Text>
         </Heading>
@@ -20,14 +23,11 @@ import MainLayout from "~/layouts/main-layout.astro"
           <Heading size="5xl" fontWeight="extrabold" as="h1">
             <Text>Hello,</Text>
             <Text>
-              I'm <SplashedText as="span">Tristan</SplashedText>
+              I'm <SplashedText as="span">{settings.name}</SplashedText>
             </Text>
           </Heading>
           <Stack gap="0.5">
-            <Text size="lg">web developer / language enthusiast</Text>
-            <Text size="lg">
-              dedicated to building great things on the web platform for better life
-            </Text>
+            {settings.intro.split("\n").map((text) => <Text size="lg">{text}</Text>)}
           </Stack>
         </Stack>
       </Grid>
