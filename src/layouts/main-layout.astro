@@ -11,7 +11,7 @@ const { title } = Astro.props
 ---
 
 <RootLayout title={title}>
-  <Flex position="relative" w="full" h="full" minH="screen" overflow="auto">
+  <Flex position="relative" w="full" h="full" overflow="auto">
     <SideBar initialRoute={Astro.url.pathname} client:load transition:persist />
     <SideBarOverlay client:load transition:persist />
     <Flex w="full" flex="1">

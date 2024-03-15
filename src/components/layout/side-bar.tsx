@@ -82,8 +82,6 @@ export const SideBar = ({ initialRoute }: { initialRoute: string }) => {
       bg="bg.default"
       w="60"
       h="full"
-      minH="screen"
-      maxH="screen"
       flexShrink="0"
       borderRightWidth="1"
       zIndex="modal"

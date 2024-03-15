@@ -1,6 +1,7 @@
 @layer reset, base, tokens, recipes, utilities;
 
 :root {
+  height: 100%;
   --font-fig-tree: "Figtree Variable";
   --font-dm-mono: "DM Mono";
   --global-font-body: var(--font-fig-tree);
