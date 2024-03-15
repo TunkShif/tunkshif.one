@@ -18,7 +18,10 @@ export default defineConfig({
     }
   },
   adapter: cloudflare({
-    imageService: "compile"
+    mode: "directory",
+    runtime: {
+      mode: "local",
+      type: "pages"
+    }
   })
 })
-

@@ -1,16 +1,14 @@
 import { collection, config, fields, singleton } from "@keystatic/core"
-import { env } from "~/libs/environment"
 
-const storage =
-  env.MODE === "production"
-    ? {
-        kind: "github" as const,
-        repo: {
-          owner: env.PUBLIC_GITHUB_OWNER,
-          name: env.PUBLIC_GITHUB_REPO
-        }
+const storage = import.meta.env.DEV
+  ? { kind: "local" as const }
+  : {
+      kind: "github" as const,
+      repo: {
+        owner: "TunkShif",
+        name: "tunkshif.one"
       }
-    : { kind: "local" as const }
+    }
 
 const settings = singleton({
   label: "Settings",
