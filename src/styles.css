@@ -2,8 +2,16 @@
 
 :root {
   height: 100%;
+
   --font-fig-tree: "Figtree Variable";
   --font-dm-mono: "DM Mono";
+
   --global-font-body: var(--font-fig-tree);
   --global-font-mono: var(--font-dm-mono);
+
+  --colors-loading-indicator: var(--colors-accent-8);
+}
+
+:root:is(.dark) {
+  --colors-loading-indicator: var(--colors-accent-10);
 }

@@ -23,6 +23,7 @@
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "astro": "^4.5.4",
+    "astro-loading-indicator": "^0.3.0",
     "date-fns": "^3.5.0",
     "lucide-react": "^0.358.0",
     "radash": "^12.1.0",
