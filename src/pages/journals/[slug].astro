@@ -1,6 +1,7 @@
 ---
-import JournalsLayout from "~/layouts/journals-layout.astro"
+import BlurrableImage from "~/components/common/blurrable-image.astro"
 import { ArticleView } from "~/components/layout/article-view"
+import JournalsLayout from "~/layouts/journals-layout.astro"
 import { Journals } from "~/libs/collections"
 
 const { slug } = Astro.params
@@ -16,6 +17,6 @@ export async function getStaticPaths() {
 
 <JournalsLayout title={journal.data.title} isArticleView>
   <ArticleView post={journal} back="/journals" client:load>
-    <Content />
+    <Content components={{ img: BlurrableImage }} />
   </ArticleView>
 </JournalsLayout>
