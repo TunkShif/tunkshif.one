@@ -1,8 +1,9 @@
 import { Presence } from "@ark-ui/react"
-import { MenuIcon, MoonIcon, SunIcon, SunMoonIcon, XIcon } from "lucide-react"
+import { MenuIcon, MoonIcon, SquarePenIcon, SunIcon, SunMoonIcon, XIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Box, Flex, HStack, Stack, styled } from "styled-system/jsx"
 import { hstack, stack } from "styled-system/patterns"
+import { Tooltip } from "~/components/common/tooltip"
 import { PresetIcon } from "~/components/icon-set"
 import { useRoute } from "~/components/layout/use-route"
 import { IconButton } from "~/components/ui/icon-button"
@@ -132,14 +133,27 @@ export const SideBar = ({ initialRoute }: { initialRoute: string }) => {
         </styled.nav>
       </Stack>
 
-      <HStack justifyContent="end" p="2">
-        <ThemeToggle />
+      <HStack gap="1" justifyContent="end" p="2">
+        <NewPostButton />
+        <ThemeButton />
       </HStack>
     </Stack>
   )
 }
 
-const ThemeToggle = () => {
+const NewPostButton = () => {
+  return (
+    <Tooltip content="New Post">
+      <IconButton size="sm" variant="ghost" asChild>
+        <a href="/keystatic">
+          <SquarePenIcon />
+        </a>
+      </IconButton>
+    </Tooltip>
+  )
+}
+
+const ThemeButton = () => {
   const [theme, setTheme] = useState<"system" | "light" | "dark">("system")
 
   useEffect(() => {
@@ -156,14 +170,16 @@ const ThemeToggle = () => {
   }, [theme])
 
   return (
-    <IconButton
-      size="sm"
-      variant="ghost"
-      onClick={() => setTheme((theme) => (theme === "dark" ? "light" : "dark"))}
-    >
-      {theme === "system" && <SunMoonIcon />}
-      {theme === "light" && <SunIcon />}
-      {theme === "dark" && <MoonIcon />}
-    </IconButton>
+    <Tooltip content="Theme Mode">
+      <IconButton
+        size="sm"
+        variant="ghost"
+        onClick={() => setTheme((theme) => (theme === "dark" ? "light" : "dark"))}
+      >
+        {theme === "system" && <SunMoonIcon />}
+        {theme === "light" && <SunIcon />}
+        {theme === "dark" && <MoonIcon />}
+      </IconButton>
+    </Tooltip>
   )
 }
