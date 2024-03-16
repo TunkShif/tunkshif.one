@@ -36,6 +36,7 @@ export const ArticleView = ({
         position="sticky"
         top="0"
         insetX="0"
+        zIndex="docked"
         transition="colors {durations.slow} ease-in-out"
         className={css({
           "[data-scrolled=true] &": {

@@ -1,0 +1,57 @@
+---
+import { readFile } from "node:fs/promises"
+import { Image } from "astro:assets"
+import sharp from "sharp"
+import { css } from "styled-system/css"
+
+export interface Props {
+  src: ImageMetadata
+  alt: string
+}
+
+const { src, alt } = Astro.props
+
+// is there a less hacky way to get the real path of the image?
+const file = import.meta.env.PROD
+  ? `dist/$server_build${src.src}`
+  : new URL(src.src, import.meta.url).pathname.replace(/^\/@fs/, "")
+
+const image = await readFile(file)
+const blurred = await sharp(image)
+  .resize(16)
+  .webp()
+  .toBuffer()
+  .then((data) => data.toString("base64"))
+const encoded = `data:image/webp;base64,${blurred}`
+---
+
+<div class={css({ position: "relative", overflow: "hidden", my: "5", rounded: "sm" })}>
+  <img
+    src={encoded}
+    width={src.width}
+    height={src.height}
+    alt={alt}
+    class={css({
+      position: "absolute",
+      w: "full",
+      h: "full",
+      filter: "auto",
+      blur: "lg",
+      objectFit: "cover",
+      objectPosition: "center",
+      margin: "0"
+    })}
+  />
+  <Image
+    src={src}
+    alt={alt}
+    data-loading
+    onload="delete this.dataset.loading"
+    class={css({
+      position: "relative",
+      margin: "0",
+      transition: "opacity {durations.fast} linear",
+      _loading: { opacity: 0 }
+    })}
+  />
+</div>
