@@ -1,0 +1,112 @@
+---
+title: 在 Absinthe 中对聚合类型的字段进行批量查询
+draft: true
+summary: 如何使用 Dataloader 在 Absinthe 中实现对聚合类型的字段的批量查询
+language: zh
+created: 2024-03-16
+category: Dev
+topics:
+  - elixir
+  - absinthe
+  - graphql
+---
+## 参考来源
+
+* [Aggregate fields in Absinthe - Elixir Forum](https://elixirforum.com/t/aggregate-fields-in-absinthe/13487/8)
+
+## 问题背景
+
+在 GraphQL 中，我们通常会使用批量加载数据的方式来避免 [N+1 问题](https://hexdocs.pm/absinthe/batching.html)。在 Absinthe 中，可以使用 [Dataloader](https://hexdocs.pm/dataloader/readme.html) 这个库来实现数据批量加载，其本身提供了两种类型的加载源支持：Ecto Schema 和 KV Source。我们可以使用 KV 类型的加载器来实现对聚合类型数据字段的批量加载。
+
+假设现在我们有下面这样的 GraphQL Query 来查询用户的发言数和发帖数：
+
+```graphql
+query {
+  users {
+    statistics {
+      chats
+      threads
+    }
+  }
+}
+```
+
+为了避免 N+1 次查询的出现，我们显然需要对 `statistics` 字段的数据进行批量加载，其核心逻辑是通过所有用户的 id 列表，只调用一次查询获取到所有对应 id 用户的统计数据。最终将这些统计数据与用户 id 构建成对应的映射表，使用 Dataloader 提供的 KV 类型的 loader 来实现批量加载。
+
+## 代码实现
+
+首先在相关的 context 中实现根据用户 id 批量查询统计数据并构建对应映射表的函数：
+
+```elixir
+defmodule Statistics do
+  import Ecto.Query
+  alias Chats.{Message, Thread}
+
+  def get_user_chats_map(user_ids) do
+    query =
+      from message in Message,
+        where: message.sender_id in ^user_ids,
+        group_by: message.sender_id,
+        select: {message.sender_id, count(message.id)}
+
+    Repo.all(query)
+    |> Map.new()
+  end
+
+  def get_user_threads_map(user_ids) do
+    query =
+      from thread in Thread,
+        where: thread.owner_id in ^user_ids,
+        group_by: thread.owner_id,
+        select: {thread.owner_id, count(thread.id)}
+
+    Repo.all(query)
+    |> Map.new()
+  end
+end
+```
+
+然后对应的 KV dataloader 的实现：
+
+```elixir
+defmodule Dataloader.Statistics do
+
+  def data(), do: Dataloader.KV.new(&query/2)
+
+  def query(_batch_key, users) do
+    user_ids = for user <- users, do: user.id
+    chats_count_map = Statistics.get_user_chats_map(user_ids)
+    threads_count_map = Statistics.get_user_threads_map(user_ids)
+
+    for user <- users, into: %{} do
+      statistics = %{
+        chats: chats_count_map[user.id] || 0,
+        threads: threads_count_map[user.id] || 0
+      }
+
+      {user, statistics}
+    end
+  end
+end
+```
+
+最后在 schema 中调用 dataloader 作为 resolver：
+
+```elixir
+defmodule SchemaTypes
+  use Absinthe.Schema.Notation
+
+  import Absinthe.Resolution.Helpers
+
+  object :user_statistics do
+    field :chats, non_null(:integer)
+    field :threads, non_null(:integer)
+  end
+
+  object(:user) do
+    field :statistics, non_null(:user_statistics), resolve: dataloader(Statistics)
+  end
+end
+```
+
+当然上面的实现存在一个小的问题，就是不管在查询中是否指定 `chats` 或 `threads` 字段，这两个数据对应的查询语句都会执行。要解决的话也比较简单，只需要给下一级的数据字段分别指定对应数据的 resolver 即可。
